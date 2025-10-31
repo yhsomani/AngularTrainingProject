@@ -1,4 +1,3 @@
-<!-- src/app/pages/customer-register/customer-register.html -->
 <div class="flex min-h-screen items-center justify-center bg-gray-100 p-4">
     <div class="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-8 shadow-xl transition-all">
 
@@ -28,7 +27,6 @@
 
         <form #registerForm="ngForm" class="mt-8 space-y-6" (ngSubmit)="onRegister(registerForm)">
 
-            <!-- Full Name -->
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
                 <input type="text" id="name" [(ngModel)]="newUserDetails().name" name="name"
@@ -36,7 +34,6 @@
                     placeholder="John Doe" required />
             </div>
 
-            <!-- Email (Used for Login) -->
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">Email Address (Login ID)</label>
                 <input type="email" id="email" [(ngModel)]="newUserDetails().email" name="email"
@@ -44,7 +41,6 @@
                     placeholder="user@example.com" required email />
             </div>
 
-            <!-- Password -->
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                 <input type="password" id="password" [(ngModel)]="newUserDetails().password" name="password"
@@ -52,7 +48,6 @@
                     required minlength="6" />
             </div>
 
-            <!-- User Type/Role -->
             <div>
                 <label for="role" class="block text-sm font-medium text-gray-700">Select Role</label>
                 <select id="role" [(ngModel)]="newUserDetails().role" name="role"
@@ -64,7 +59,6 @@
             </div>
 
 
-            <!-- Register Button -->
             <div>
                 <button type="submit"
                     class="flex w-full justify-center rounded-md bg-green-600 px-3 py-3 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"

@@ -14,8 +14,8 @@ import { CarRentalService } from '../../services/car-rental.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
-  // Use signals for form state
-  userName = signal(''); // Will be used as 'email' for the backend
+  // FIX: Renamed signal to lowercase 'userEmail' for consistency
+  userEmail = signal('');
   password = signal('');
   errorMessage = signal('');
 
@@ -28,7 +28,7 @@ export class LoginComponent {
 
     // NOTE: The client uses 'username' but the backend expects 'email'.
     // The service handles this mapping.
-    this.carRentalService.login({ email: this.userName(), password: this.password() }).subscribe({
+    this.carRentalService.login({ email: this.userEmail(), password: this.password() }).subscribe({
       next: (response) => {
         if (response.result && response.token) {
           // Store the JWT token for subsequent requests

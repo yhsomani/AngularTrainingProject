@@ -10,7 +10,7 @@ import {
   Customer,
   DashboardData,
   UserDetails,
-  RegisterDetails // NEW IMPORT
+  RegisterDetails
 } from '../model/api.types';
 import { Capacitor } from '@capacitor/core';
 import { Router } from '@angular/router';
@@ -93,9 +93,8 @@ export class CarRentalService {
     localStorage.removeItem('userDetails');
   }
 
-  // NEW METHOD: For registering a login user (not just a customer entity)
+  // METHOD FOR USER REGISTRATION (sets password and role)
   registerUser(details: RegisterDetails): Observable<ApiResponse<any>> {
-    // This calls the backend's /api/auth/register endpoint
     return this.http
       .post<ApiResponse<any>>(`${this.authBaseUrl}/register`, details)
       .pipe(
@@ -123,7 +122,6 @@ export class CarRentalService {
     }
   }
 
-  // NOTE: This remains the API endpoint for customer *entity* CRUD, separate from login user
   createCustomer(
     customer: Customer
   ): Observable<{ success: boolean; message: string }> {

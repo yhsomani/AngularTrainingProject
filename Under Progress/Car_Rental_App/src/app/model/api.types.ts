@@ -5,20 +5,20 @@ export interface ApiResponse<T> {
   data: T | null;
 }
 
-// NEW INTERFACE for the logged-in user details
+// User details returned from login
 export interface UserDetails {
   id: string; // MongoDB ObjectId
   email: string;
   name: string;
-  role: 'admin' | 'user'; // Assuming roles are simple admin/user
+  role: 'admin' | 'user';
 }
 
-// Updated interface to include password for registration form use
+// Data model for the user registration form (includes password and role)
 export interface RegisterDetails {
   name: string;
   email: string;
   password: string;
-  role: 'user' | 'admin'; // User selects role on registration
+  role: 'user' | 'admin';
 }
 
 export interface Customer {

@@ -7,7 +7,7 @@ const customerController = require('../controllers/customerController');
 const bookingController = require('../controllers/bookingController');
 
 // --- Public Routes (Customer Registration is public) ---
-// This route is now public and does NOT require a JWT token
+// This route is public and does NOT require a JWT token
 router.post('/CreateNewCustomer', customerController.createCustomer);
 
 // --- Protect all other data routes with JWT authentication ---
@@ -24,7 +24,6 @@ router.delete('/DeleteCarbyCarId', carController.deleteCar);
 
 // --- Customer Routes ---
 router.get('/GetCustomers', customerController.getCustomers);
-// The POST route is moved above router.use(auth)
 router.put('/UpdateCustomer', customerController.updateCustomer);
 router.delete('/DeletCustomerById', customerController.deleteCustomer); // Matches client typo
 

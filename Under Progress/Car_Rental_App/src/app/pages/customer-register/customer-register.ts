@@ -11,7 +11,7 @@ type Notification = {
   message: string;
 };
 
-// Initial state for the registration form, now includes email, password, and role
+// Initial state for the registration form
 const EMPTY_REGISTER_DETAILS: RegisterDetails = {
   name: '',
   email: '',
@@ -46,13 +46,14 @@ export class CustomerRegisterComponent {
 
     this.isLoading.set(true);
 
-    // Call the dedicated user registration endpoint
     this.carRentalService.registerUser(this.newUserDetails()).subscribe({
-      next: (response: { success: boolean; message: string }) => {
+      next: (response: ApiResponse<any>) => {
         this.isLoading.set(false);
-        if (response.success) {
+        if (response.result) {
           this.showNotification('success', response.message + ' You can now log in.');
-          this.router.navigate(['/login']);
+          this.resetForm(form);
+          // Redirect to login after successful account creation
+          setTimeout(() => this.router.navigate(['/login']), 1000);
         } else {
           this.showNotification('error', response.message);
         }

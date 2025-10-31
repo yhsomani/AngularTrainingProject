@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
     try {
-        // Now expecting name, email, password, and optionally role
+        // Now expecting name, email, password, and role from the frontend form
         const { email, password, name, role } = req.body;
 
         let user = await User.findOne({ email });
@@ -14,13 +14,12 @@ exports.register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Assign the role if provided, otherwise use the default defined in the User model ('admin')
-        // NOTE: Since the frontend now sends 'admin' or 'user', we pass it directly.
+        // Use the role selected by the user in the form
         user = await User.create({
             email,
             password: hashedPassword,
             name,
-            role: role || 'user' // Use provided role or default to 'user' if client omits it.
+            role: role || 'user' // Use the provided role or default to 'user'
         });
 
         res.json({ message: "User registered successfully. You can now log in.", result: true });
