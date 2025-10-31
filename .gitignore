@@ -1,0 +1,7 @@
+# skip the node_modules and package-lock.json files
+
+node_modules/
+
+package-lock.json
+
+
