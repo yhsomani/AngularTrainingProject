@@ -1,0 +1,328 @@
+<!-- Notification -->
+<div *ngIf="notification() as notif"
+  class="fade-in fixed top-24 right-8 z-50 max-w-sm rounded-lg border-l-4 p-4 shadow-xl" [ngClass]="{
+        'border-green-500 bg-green-50': notif.type === 'success',
+        'border-red-500 bg-red-50': notif.type === 'error'
+      }" role="alert">
+  <div class="flex items-center">
+    <!-- Success Icon -->
+    <svg *ngIf="notif.type === 'success'" class="h-6 w-6 flex-shrink-0 text-green-600"
+      xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round"
+        d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    </svg>
+    <!-- Error Icon -->
+    <svg *ngIf="notif.type === 'error'" class="h-6 w-6 flex-shrink-0 text-red-600" xmlns="http://www.w3.org/2000/svg"
+      fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round"
+        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+    </svg>
+    <div class="ml-3" [ngClass]="{
+            'text-green-800': notif.type === 'success',
+            'text-red-800': notif.type === 'error'
+          }">
+      <h3 class="font-bold">
+        {{ notif.type === 'success' ? 'Success' : 'Error' }}
+      </h3>
+      <p class="text-sm">{{ notif.message }}</p>
+    </div>
+    <button (click)="notification.set(null)" class="ml-4 rounded-md p-1" [ngClass]="{
+            'text-green-700 hover:bg-green-100': notif.type === 'success',
+            'text-red-700 hover:bg-red-100': notif.type === 'error'
+          }">
+      <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- Main Layout Grid -->
+<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+  <!-- Vehicle List (Left) -->
+  <div class="lg:col-span-2">
+    <div class="rounded-2xl bg-white shadow-lg">
+      <div
+        class="flex flex-col items-start justify-between gap-4 border-b border-gray-200 p-6 sm:flex-row sm:items-center">
+        <h2 class="text-lg font-semibold text-gray-900">
+          <svg class="-mt-1 mr-2 inline h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1 .4-1 1v4c.6 0 1 .4 1 1h3c.6 0 1 .4 1 1s-.4 1-1 1H3" />
+            <path d="M7 17h6" />
+            <circle cx="6.5" cy="17.5" r="2.5" />
+            <circle cx="16.5" cy="17.5" r="2.5" />
+          </svg>
+          Vehicle List
+        </h2>
+        <button (click)="getAllCars()"
+          class="flex items-center gap-2 rounded-md bg-white px-3.5 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 transition-colors hover:bg-gray-50"
+          [disabled]="isLoading()">
+          <svg class="h-4 w-4 text-gray-500" [class.animate-spin]="isLoading()" xmlns="http://www.w3.org/2000/svg"
+            width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+            <path d="M21 3v5h-5" />
+            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+            <path d="M3 21v-5h5" />
+          </svg>
+          Refresh
+        </button>
+      </div>
+      <div class="relative overflow-x-auto">
+        <!-- Loading Overlay -->
+        <div *ngIf="isLoading()"
+          class="absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-sm">
+          <svg class="h-8 w-8 animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+          </svg>
+        </div>
+
+        <!-- Table -->
+        <table class="min-w-full divide-y divide-gray-200" [class.opacity-50]="isLoading()">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col"
+                class="w-12 px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                Image
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                Vehicle
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                Reg No
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                Rate
+              </th>
+              <th scope="col"
+                class="relative px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-600">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 bg-white">
+            <tr *ngIf="!isLoading() && carList().length === 0">
+              <td colspan="5" class="px-6 py-12 text-center text-sm text-gray-500">
+                No vehicles found.
+              </td>
+            </tr>
+            <tr *ngFor="let car of carList()" class="transition-colors hover:bg-gray-50">
+              <td class="px-6 py-4">
+                <img [src]="getSafeImage(car.carImage)" alt="{{ car.brand }} {{ car.model }}"
+                  class="h-10 w-16 rounded-md object-cover" loading="lazy" (error)="onImgError($event)" />
+              </td>
+              <td class="whitespace-nowrap px-6 py-4">
+                <div class="text-sm font-medium text-gray-900">
+                  {{ car.brand }} {{ car.model }}
+                </div>
+                <div class="text-sm text-gray-500">
+                  {{ car.year }} | {{ car.color }}
+                </div>
+              </td>
+              <td class="whitespace-nowrap px-6 py-4">
+                <span class="inline-flex rounded-full bg-gray-100 px-2 text-xs font-semibold leading-5 text-gray-800">{{
+                  car.regNo }}</span>
+              </td>
+              <td class="whitespace-nowrap px-6 py-4">
+                <div class="text-sm font-medium text-gray-900">
+                  ₹{{ car.dailyRate | number: '1.0-2' }}
+                </div>
+                <div class="text-sm text-gray-500">/ day</div>
+              </td>
+              <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                <button (click)="onEdit(car)"
+                  class="mr-3 rounded-md p-1.5 text-blue-600 transition-colors hover:bg-blue-100 hover:text-blue-800"
+                  title="Edit">
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                    <path d="m15 5 4 4" />
+                  </svg>
+                </button>
+                <button (click)="confirmDelete(car)"
+                  class="rounded-md p-1.5 text-red-600 transition-colors hover:bg-red-100 hover:text-red-800"
+                  title="Delete">
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18" />
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vehicle Form (Right) -->
+  <div class="lg:col-span-1">
+    <div class="rounded-2xl bg-white p-6 shadow-lg">
+      <h2 class="mb-5 text-lg font-semibold text-gray-900">
+        <svg class="-mt-1 mr-2 inline h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M5 12h14" />
+          <path d="M12 5v14" />
+        </svg>
+        {{ newCar().carId === 0 ? 'Add New Vehicle' : 'Edit Vehicle' }}
+      </h2>
+      <form #vehicleForm="ngForm" class="space-y-4">
+        <!-- Brand & Model -->
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label for="brand" class="block text-sm font-medium text-gray-700">Brand</label>
+            <input type="text" id="brand" [(ngModel)]="newCar().brand" name="brand"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              placeholder="e.g., Toyota" required />
+          </div>
+          <div>
+            <label for="model" class="block text-sm font-medium text-gray-700">Model</label>
+            <input type="text" id="model" [(ngModel)]="newCar().model" name="model"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              placeholder="e.g., Camry" required />
+          </div>
+        </div>
+        <!-- Year & Color -->
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
+            <input type="number" id="year" [(ngModel)]="newCar().year" name="year"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              placeholder="e.g., 2024" required />
+          </div>
+          <div>
+            <label for="color" class="block text-sm font-medium text-gray-700">Color</label>
+            <input type="text" id="color" [(ngModel)]="newCar().color" name="color"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              placeholder="e.g., Blue" required />
+          </div>
+        </div>
+        <!-- Daily Rate -->
+        <div>
+          <label for="dailyRate" class="block text-sm font-medium text-gray-700">Daily Rate (₹)</label>
+          <div class="relative mt-1">
+            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <span class="text-gray-500 sm:text-sm">₹</span>
+            </div>
+            <input type="number" id="dailyRate" [(ngModel)]="newCar().dailyRate" name="dailyRate"
+              class="block w-full rounded-md border-gray-300 pl-7 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              placeholder="0.00" required />
+          </div>
+        </div>
+        <!-- Reg No -->
+        <div>
+          <label for="regNo" class="block text-sm font-medium text-gray-700">Registration No</label>
+          <input type="text" id="regNo" [(ngModel)]="newCar().regNo" name="regNo"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            [class.border-red-500]="isDuplicateRegNo()" [class.focus:border-red-500]="isDuplicateRegNo()"
+            [class.focus:ring-red-500]="isDuplicateRegNo()" placeholder="e.g., MH12AB1234" required />
+          <p *ngIf="isDuplicateRegNo()" class="mt-1 text-xs text-red-600">
+            Registration number already exists.
+          </p>
+        </div>
+        <!-- Image URL -->
+        <div>
+          <label for="carImage" class="block text-sm font-medium text-gray-700">Car Image URL</label>
+          <input type="url" id="carImage" [(ngModel)]="newCar().carImage" name="carImage"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            placeholder="https://..." />
+
+          <!-- Optional file input: convert selected images to data URLs for preview/storage -->
+          <div class="mt-2 flex items-center gap-3">
+            <label
+              class="cursor-pointer rounded-md bg-white px-3 py-2 text-sm text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+              Upload Image
+              <input type="file" accept="image/*" (change)="onFileChange($event)" class="sr-only" />
+            </label>
+            <img [src]="getSafeImage(newCar().carImage)" alt="Preview" class="h-12 w-20 rounded-md object-cover"
+              (error)="onImgError($event)" />
+          </div>
+        </div>
+        <!-- Buttons -->
+        <div class="flex items-center justify-end gap-3 pt-4">
+          <button type="button" (click)="resetForm(vehicleForm)"
+            class="rounded-md bg-white px-3.5 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 transition-colors hover:bg-gray-50"
+            [disabled]="isLoading()">
+            Clear
+          </button>
+          <button *ngIf="newCar().carId === 0; else updateBtn" type="button" (click)="onSaveCar(vehicleForm)"
+            class="flex items-center justify-center rounded-md bg-blue-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            [disabled]="isLoading() || isDuplicateRegNo() || vehicleForm.invalid">
+            <svg *ngIf="isLoading()" class="-ml-1 mr-2 h-5 w-5 animate-spin" xmlns="http://www.w3.org/2000/svg"
+              fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
+            </svg>
+            Save Vehicle
+          </button>
+          <ng-template #updateBtn>
+            <button type="button" (click)="onUpdateCar(vehicleForm)"
+              class="flex items-center justify-center rounded-md bg-yellow-500 px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-yellow-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-500"
+              [disabled]="isLoading() || isDuplicateRegNo() || vehicleForm.invalid">
+              <svg *ngIf="isLoading()" class="-ml-1 mr-2 h-5 w-5 animate-spin" xmlns="http://www.w3.org/2000/svg"
+                fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
+              </svg>
+              Update Vehicle
+            </button>
+          </ng-template>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div *ngIf="modalState().visible" class="fade-in fixed inset-0 z-50 flex items-center justify-center">
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="closeModal()"></div>
+  <!-- Modal Panel -->
+  <div class="modal-scale-in relative z-10 w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
+    <div class="p-6">
+      <div class="flex items-start gap-4">
+        <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100">
+          <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+          </svg>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h3 class="text-lg font-semibold leading-6 text-gray-900" id="modal-title">
+            {{ modalState().title }}
+          </h3>
+          <div class="mt-2">
+            <p class="text-sm text-gray-600">{{ modalState().message }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-row-reverse gap-3 bg-gray-50 px-6 py-4">
+      <button type="button"
+        class="rounded-md bg-red-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-red-700"
+        (click)="handleModalConfirm()">
+        Delete
+      </button>
+      <button type="button"
+        class="rounded-md bg-white px-3.5 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 transition-colors hover:bg-gray-50"
+        (click)="closeModal()">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
