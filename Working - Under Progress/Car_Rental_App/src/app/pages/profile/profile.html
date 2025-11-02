@@ -1,0 +1,109 @@
+<div class="space-y-8">
+    <div *ngIf="notification() as notif"
+        class="fade-in fixed top-24 right-8 z-50 max-w-sm rounded-lg border-l-4 p-4 shadow-xl" [ngClass]="{
+        'border-green-500 bg-green-50': notif.type === 'success',
+        'border-red-500 bg-red-50': notif.type === 'error'
+      }" role="alert">
+        <div class="flex items-center">
+            <div class="ml-3">
+                <h3 class="font-bold"
+                    [ngClass]="{'text-green-800': notif.type === 'success', 'text-red-800': notif.type === 'error'}">
+                    {{ notif.type === 'success' ? 'Success' : 'Error' }}
+                </h3>
+                <p class="text-sm"
+                    [ngClass]="{'text-green-700': notif.type === 'success', 'text-red-700': notif.type === 'error'}">{{
+                    notif.message }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="rounded-2xl bg-white p-6 shadow-lg max-w-lg mx-auto">
+        <h2 class="flex items-center gap-2 border-b border-gray-200 pb-4 mb-6 text-xl font-semibold text-gray-900">
+            <svg class="h-6 w-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+            My Profile
+        </h2>
+
+        <form #profileForm="ngForm" (ngSubmit)="onUpdateProfile(profileForm)" class="space-y-6">
+            <div class="rounded-md bg-blue-50 p-4">
+                <p class="text-sm font-medium text-blue-800">Your Role: <span class="font-semibold">{{ userRole |
+                        uppercase }}</span></p>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Personal Details</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                        <input type="text" id="name" [(ngModel)]="profile().name" name="name"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                            required />
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email Address (Login
+                            ID)</label>
+                        <input type="email" id="email" [(ngModel)]="profile().email" name="email"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                            required email />
+                    </div>
+                    <div>
+                        <label for="mobileNo" class="block text-sm font-medium text-gray-700">Mobile Number</label>
+                        <input type="tel" id="mobileNo" [(ngModel)]="profile().mobileNo" name="mobileNo"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                            required pattern="[0-9]{10,12}" />
+                    </div>
+                    <div>
+                        <label for="customerCity" class="block text-sm font-medium text-gray-700">City</label>
+                        <input type="text" id="customerCity" [(ngModel)]="profile().customerCity" name="customerCity"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                            required />
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-gray-200" />
+
+            <div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Change Password (Optional)</h3>
+                <p class="text-sm text-gray-500 mb-4">Fill in both fields to update your password. Requires current
+                    password.</p>
+                <div class="space-y-4">
+                    <div>
+                        <label for="currentPassword" class="block text-sm font-medium text-gray-700">Current
+                            Password</label>
+                        <input type="password" id="currentPassword" [ngModel]="currentPassword()"
+                            (ngModelChange)="currentPassword.set($event)" name="currentPassword"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
+                            minlength="6" />
+                    </div>
+                    <div>
+                        <label for="newPassword" class="block text-sm font-medium text-gray-700">New Password</label>
+                        <input type="password" id="newPassword" [ngModel]="newPassword()"
+                            (ngModelChange)="newPassword.set($event)" name="newPassword"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                            minlength="6" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-4">
+                <button type="submit"
+                    class="flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                    [disabled]="isLoading() || profileForm.invalid">
+                    <svg *ngIf="isLoading()" class="-ml-1 mr-2 h-5 w-5 animate-spin" xmlns="http://www.w3.org/2000/svg"
+                        fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                        </path>
+                    </svg>
+                    Save Profile
+                </button>
+            </div>
+        </form>
+    </div>
+</div> 
