@@ -1,256 +1,149 @@
-Apex Car Rental Management System
+# Apex Car Rental Management System
 
-This is a full-stack application for managing car rentals, featuring a secure Angular frontend portal and a Node.js (Express/MongoDB) REST API backend.
+This is a complete full-stack application for managing car rentals, featuring a secure **Angular (Standalone)** frontend portal and a **Node.js (Express/MongoDB)** REST API backend. The system supports two distinct user roles: **Admin** and **User (Customer)**, with granular Role-Based Access Control (RBAC) applied to all features.
 
-The system supports two user roles:
+## 🚀 Key Features
 
-Admin: Full access to dashboard, vehicle management, customer management, and booking control.
+The project is built around robust and modernized features:
 
-User (Customer): Restricted access to view vehicles, view their personal bookings, update their profile, and create new bookings.
+### Frontend (Angular)
 
-🚀 Key Features
+  * **Role-Based Access Control (RBAC):** Navigation elements and actionable buttons (CRUD operations) are dynamically displayed based on the logged-in user's role (Admin vs. User).
+  * **User Registration:** A public registration page allows new users to create an account, which automatically creates and links a corresponding Customer profile with all necessary details (mobile number, city).
+  * **Profile Management (Feature \#4):** Logged-in users can access a dedicated profile page to view and securely update their personal details (name, email, mobile, city) and change their password.
+  * **Booking Workflow:**
+      * **Multi-Day Rentals (Feature \#2):** The booking form uses `startDate` and `endDate`, with the total bill automatically calculated for standard users based on the selected car's `dailyRate` and the number of rental days.
+      * **Self-Service Booking:** Standard users can only book for themselves, while the Admin has full control over all fields.
+  * **Data Management:** Dedicated pages for managing Vehicles, Customers, and Bookings are available exclusively to the **Admin**.
 
-Frontend (Angular)
+### Backend (Node.js/Express/MongoDB)
 
-Role-Based Access Control (RBAC): Navigation and features are dynamically hidden or disabled based on the user's admin or user role.
+  * **Secure Authentication:** Uses **JWT** for token-based authentication and **bcryptjs** for secure password hashing.
+  * **User & Customer Synchronization:** New user registration and profile updates automatically maintain data consistency by synchronizing changes across the linked `User` and `Customer` documents in the database.
+  * **Robust Booking Logic:**
+      * **Availability Check (Feature \#3):** Implements a server-side logic to check for date-range overlap to prevent multiple bookings of the same vehicle for conflicting time periods.
+      * **Role-Specific Endpoints:** Separate endpoints (`/CreateUserBooking` vs. `/CreateNewBooking`) enforce business rules for users (calculated bill/zero discount) and grant full control to admins.
+  * **Dashboard API (Feature \#1):** A dedicated, Admin-protected route (`/GetDashboardData`) provides consolidated statistics on revenue, total bookings, and customers.
 
-User Registration: New users can create an account, which automatically creates a corresponding Customer profile with required details (mobile, city).
+-----
 
-Profile Management: Logged-in users can view and update their personal details (name, email, mobile, city) and change their password (Feature #4).
+## 🛠️ Technology Stack
 
-Booking Workflow: Standard users can create multi-day bookings with automatically calculated rates (Feature #2) and check real-time availability (Feature #3).
+| Component | Technology | Description |
+| :--- | :--- | :--- |
+| **Frontend** | **Angular** (Standalone Components) | Modern framework using Signals for efficient state management. |
+| **Styling** | **Tailwind CSS** | Utility-first CSS framework for a responsive UI. |
+| **Backend** | **Node.js / Express** | Fast, unopinionated backend API framework. |
+| **Database** | **MongoDB / Mongoose** | NoSQL database with an Object Data Modeling (ODM) layer for schema validation. |
+| **Authentication** | **JWT / bcryptjs** | Secure session management and password hashing. |
 
-Data Management: Dedicated pages for managing Vehicles, Customers, and Bookings (Admin only).
+-----
 
-Backend (Node.js/Express/MongoDB)
+## ⚙️ Setup and Installation
 
-JWT Authentication: Secure login, registration, and role-based middleware for all API routes.
+This project requires **two separate processes** running concurrently: the backend API and the Angular frontend.
 
-User & Customer Synchronization: New user registration automatically creates a linked customer profile using the same MongoDB _id for seamless data retrieval (Feature #4).
+### 1\. Backend Setup (`Working - Under Progress/car-rental-backend`)
 
-Robust Booking Logic:
+1.  **Navigate to the Backend Directory:**
 
-Supports multi-day rentals (startDate/endDate).
+    ```bash
+    cd Working - Under Progress/car-rental-backend
+    ```
 
-Automatically calculates duration and total bill for user-initiated bookings (Feature #2).
+2.  **Install Dependencies:**
 
-Implements a date-range overlap check to prevent double-booking of a vehicle (Feature #3).
+    ```bash
+    npm install
+    ```
 
-Admin Endpoints: Routes for fetching consolidated dashboard data (Feature #1) and performing CRUD operations on Vehicles, Customers, and all Bookings.
+    *Key dependencies include:* `express`, `mongoose`, `jsonwebtoken`, `bcryptjs`, and `dotenv`.
 
-🛠️ Technology Stack
+3.  **Configure Environment:**
+    Create a file named **`.env`** in the root of the backend directory with the following content (replace placeholders with your actual values):
 
-Component
+    ```
+    MONGO_URI=mongodb://localhost:27017/CarRentalDB
+    JWT_SECRET=superSecretKeyForCarRentalApp
+    ```
 
-Technology
+    > **Note:** The default `MONGO_URI` is set to a local instance.
 
-Description
+4.  **Start the Server:**
 
-Frontend
+    ```bash
+    npm run dev
+    # OR (if nodemon is not installed globally):
+    # node server.js
+    ```
 
-Angular (Standalone)
+    The server should start on `http://localhost:5000`.
 
-Modern application framework, uses Signals for state management.
+### 2\. Frontend Setup (`Working - Under Progress/Car_Rental_App`)
 
-Styling
+1.  **Navigate to the Frontend Directory:**
 
-Tailwind CSS
+    ```bash
+    cd ../Car_Rental_App
+    ```
 
-Utility-first CSS framework for a responsive, modern UI.
+2.  **Install Dependencies:**
 
-Backend
+    ```bash
+    npm install
+    ```
 
-Node.js / Express
+    *The project is based on Angular CLI version 20.3.7*.
 
-Fast, unopinionated backend API framework.
+3.  **Start the Angular Dev Server (with Proxy):**
+    The project is configured with a `proxy.conf.json` to forward all API requests from `/api` to the backend running at `http://localhost:5000`.
 
-Database
-
-MongoDB / Mongoose
-
-Flexible NoSQL database with an ODM for schema validation.
-
-Authentication
-
-JSON Web Tokens (JWT) / bcryptjs
-
-Secure session management and password hashing.
-
-⚙️ Setup and Installation
-
-This application requires two separate processes to run concurrently: the backend API and the Angular frontend.
-
-1. Backend Setup
-
-Navigate to the Working - Under Progress/car-rental-backend directory.
-
-Install Dependencies:
-
-npm install
-
-
-Configure Environment:
-Create a .env file in the root of the backend directory with your MongoDB connection string and a JWT secret.
-
-.env
-
-MONGO_URI=mongodb://localhost:27017/CarRentalDB # Use your actual Mongo URI
-JWT_SECRET=superSecretKeyForCarRentalApp
-
-
-Start the Server:
-
-# You need `nodemon` installed globally (`npm install -g nodemon`)
-npm run dev
-# OR:
-node server.js
-
-
-The server should start on http://localhost:5000.
-
-2. Frontend Setup (Angular)
-
-Navigate to the Working - Under Progress/Car_Rental_App directory.
-
-Install Dependencies:
-
-npm install
-
-
-Start the Angular Dev Server:
-The project is configured to use a proxy (proxy.conf.json) to forward API requests from /api to the backend running on http://localhost:5000.
-
-npm start
-# This runs: ng serve --proxy-config proxy.conf.json
-
-
-Access the Application:
-Open your browser and navigate to http://localhost:4200/#/login.
-
-🔑 Authentication and Testing
-
-Default Credentials
-
-Since all user accounts must be created through the registration page, there are no default login credentials.
-
-Getting Started
-
-Navigate to http://localhost:4200/#/register-customer.
-
-Create an Admin Account: Fill out the form and select the Admin role. Use a clear test email (e.g., admin@test.com).
-
-Create a User Account: Fill out the form again and select the User role. Use a different email (e.g., user@test.com).
-
-Login: Use the credentials for your Admin account at http://localhost:4200/#/login to access the full Dashboard and Management features.
-
-Role Differentiators
-
-Feature
-
-Admin Role
-
-User Role
-
-Dashboard Access
-
-Full statistics (Revenue, Bookings, Customers).
-
-Only My Total Bookings.
-
-Vehicle Management
-
-Full CRUD access on /vehicles page.
-
-Read-only view on /vehicles page.
-
-Customer Management
-
-Full CRUD access on /customers page.
-
-Redirected away (access denied).
-
-Booking Creation
-
-Full control (select any customer, custom bill amount).
-
-Self-booking only, mandatory rate calculation.
-
-Bookings List
-
-Sees all bookings in the system.
-
-Only sees their own bookings.
-
-Profile (New)
-
-View/Update all fields (name, email, mobile, city, password).
-
-View/Update all fields (name, email, mobile, city, password).
-
-📦 Project Structure Overview
-
-The repository is divided into two main folders for the Angular frontend and the Node.js backend:
-
-Working - Under Progress/Car_Rental_App/ (Frontend)
-
-Path
-
-Description
-
-src/app/app.routes.ts
-
-Defines all application routes, including new ones for registration and profile.
-
-src/app/interceptors/auth.interceptor.ts
-
-Attaches the JWT token to all API requests.
-
-src/app/services/car-rental.service.ts
-
-Centralized logic for all API calls, including role checks and data handling.
-
-src/app/pages/booking/*
-
-(Updated) Handles multi-day booking calculation and logic for both Admin/User flows.
-
-src/app/pages/customer-register/*
-
-(New) Component for public user registration.
-
-src/app/pages/profile/*
-
-(New) Component for users to manage their account details and password.
-
-src/app/pages/vehicle/*
-
-(Updated) Role guards added to restrict CRUD actions to Admins.
-
-Working - Under Progress/car-rental-backend/ (Backend)
-
-Path
-
-Description
-
-server.js
-
-Main Express server setup and MongoDB connection.
-
-middleware/auth.js
-
-JWT validation middleware, extracts user ID and role from the token.
-
-routes/carRentalRoutes.js
-
-(Updated) Implements checkAdmin middleware to secure management routes (Vehicles, Customers, All Bookings, Dashboard).
-
-controllers/authController.js
-
-(Updated) Handles User registration and Customer profile creation synchronously. Includes new updateUser logic for profile changes.
-
-controllers/bookingController.js
-
-(Updated) Implements createUserBooking for user flow (auto-calculated bill/no discount) and booking overlap check (Feature #3).
-
-models/User.js & models/Customer.js
-
-Define Mongoose schemas; Customer schema is linked to User schema via matching _ids.
+    ```bash
+    npm start
+    # This runs: ng serve --proxy-config proxy.conf.json
+    ```
+
+4.  **Access the Application:**
+    Open your browser and navigate to:
+    **`http://localhost:4200/#/login`**
+
+-----
+
+## 🔑 Authentication and Testing
+
+There are no default credentials. All user accounts must be created through the public registration page.
+
+### Getting Started
+
+1.  Navigate to **`http://localhost:4200/#/register-customer`**.
+2.  **Create an Admin Account:** Fill out the form, ensure you provide a valid mobile number and city, and select the **`Admin`** role.
+3.  **Create a User Account:** Create at least one additional account, selecting the **`User`** role.
+4.  **Login:** Use the credentials for your **Admin** account to access the full portal.
+
+### Role Differentiators
+
+| Feature | Admin Role | User Role |
+| :--- | :--- | :--- |
+| **Dashboard** | Full statistics (Revenue, Bookings, Customers) | Only My Total Bookings. |
+| **Vehicle Mgmt (`/vehicles`)** | Full CRUD access (Create, Edit, Delete). | Read-only view of available cars. |
+| **Customer Mgmt (`/customers`)** | Full CRUD access. | Redirected away (access denied). |
+| **Booking Creation** | Full control (any customer, custom bill, discount). | Self-booking only, calculated rate, zero discount enforced. |
+| **Bookings List** | Sees all bookings in the system. | Only sees their personal bookings. |
+
+-----
+
+## 📦 Project Structure Overview
+
+The repository is organized into distinct directories for the front and back ends:
+
+  * **`Working - Under Progress/Car_Rental_App/`** (Angular Frontend)
+      * `src/app/services/car-rental.service.ts`: Central API service layer with role-based logic and data handling.
+      * `src/app/interceptors/auth.interceptor.ts`: Attaches the JWT token to all API requests.
+      * `src/app/pages/profile/`: New feature for user profile viewing and updating.
+      * `src/app/pages/customer-register/`: Public page for creating new user/customer accounts.
+  * **`Working - Under Progress/car-rental-backend/`** (Node.js Backend)
+      * `server.js`: Main Express server and MongoDB connection setup.
+      * `middleware/auth.js`: JWT validation and token decoding (extracts user role).
+      * `routes/carRentalRoutes.js`: Central API routes, where `checkAdmin` middleware secures management endpoints.
+      * `controllers/bookingController.js`: Contains `checkDateOverlap` and `calculateDuration` for robust booking logic.
+      * `models/`: Mongoose schemas for `User`, `Customer`, `Car`, and `Booking`.
