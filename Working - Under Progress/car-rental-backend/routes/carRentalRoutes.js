@@ -50,8 +50,6 @@ router.delete('/DeleteCarbyCarId', checkAdmin, carController.deleteCar);
 
 // Customer Routes (Management)
 router.get('/GetCustomers', checkAdmin, customerController.getCustomers);
-// NOTE: CreateNewCustomer is not needed here as registration handles it, and this route is now obsolete. 
-// We keep it for backward compatibility but restrict it.
 router.post('/CreateNewCustomer', checkAdmin, customerController.createCustomer);
 router.put('/UpdateCustomer', checkAdmin, customerController.updateCustomer);
 // FIX: Corrected typo 'DeletCustomerById' to 'DeleteCustomerById'
@@ -60,6 +58,6 @@ router.delete('/DeleteCustomerById', checkAdmin, customerController.deleteCustom
 // Booking Routes (Management)
 router.get('/geAllBookings', checkAdmin, bookingController.getAllBookings);
 router.post('/CreateNewBooking', checkAdmin, bookingController.createBooking); // ADMIN ONLY - for full control
-router.delete('/DeletBookingById', checkAdmin, bookingController.deleteBooking); // ADMIN ONLY
+router.delete('/DeletBookingById', checkAdmin, bookingController.deleteBooking); // ADMIN ONLY (Backend typo retained: DeletBookingById)
 
 module.exports = router;

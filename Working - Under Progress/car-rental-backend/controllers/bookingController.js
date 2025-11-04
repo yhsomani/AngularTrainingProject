@@ -33,10 +33,11 @@ function calculateDuration(startDateStr, endDateStr) {
     start.setUTCHours(0, 0, 0, 0);
     end.setUTCHours(0, 0, 0, 0);
 
-    const diffTime = Math.abs(end - start);
-    // Convert to days (milliseconds per day) and add 1 day for inclusive count
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-    return diffDays;
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    // Convert to days (milliseconds per day)
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    // Add 1 day for inclusive count (e.g., booking from Jan 1 to Jan 1 is 1 day)
+    return diffDays + 1;
 }
 
 // GET /api/CarRentalApp/GetDashboardData (FEATURE #1: Complete Dashboard Data)
@@ -50,8 +51,7 @@ exports.getDashboardData = async (req, res) => {
         // 2. Total Customers
         const totalCustomers = await Customer.countDocuments();
 
-        // 3. Today's Revenue (Bookings that start today)
-        // Find bookings that START today (simplest interpretation for a dashboard metric)
+        // 3. Today's Revenue (Bookings that START today)
         const todaysBookings = await Booking.find({ startDate: todayStr });
         const todayTotalAmount = todaysBookings.reduce((sum, b) => sum + b.totalBillAmount, 0);
 
@@ -94,15 +94,11 @@ exports.filterBookings = async (req, res) => {
         }
 
         // FIX: Update date filtering logic to check for booking overlap
-        // A booking (B_start, B_end) overlaps with filter range (F_start, F_end) if:
-        // 1. B_end >= F_start (Booking ends on or after filter start)
-        // 2. B_start <= F_end (Booking starts on or before filter end)
         if (fromBookingDate) {
             query.endDate = { $gte: fromBookingDate };
         }
 
         if (toBookingDate) {
-            // Check if query.startDate already exists, if not, create it as an empty object
             if (!query.startDate) {
                 query.startDate = {};
             }

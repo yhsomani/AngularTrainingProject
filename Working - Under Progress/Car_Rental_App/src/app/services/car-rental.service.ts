@@ -33,6 +33,7 @@ export class CarRentalService {
     return Capacitor.isNativePlatform();
   }
 
+  // FIX: Use localhost:5000 for development (with proxy fallback for browser)
   private dataBaseUrl = this.isNative
     ? 'http://localhost:5000/api/CarRentalApp'
     : '/api/CarRentalApp';
@@ -72,11 +73,11 @@ export class CarRentalService {
     if (!user) return null;
 
     return {
-      customerId: user.id,
+      customerId: user.id, // The User ID is deliberately the Customer ID on the backend
       customerName: user.name,
-      mobileNo: '', // Placeholder, actual value retrieved from backend during booking
+      mobileNo: '', // Placeholder, will be overwritten by data from getCustomerProfileByUserId
       email: user.email,
-      customerCity: '', // Placeholder, actual value retrieved from backend during booking
+      customerCity: '', // Placeholder, will be overwritten by data from getCustomerProfileByUserId
     } as Customer;
   }
 
@@ -111,6 +112,8 @@ export class CarRentalService {
   logout(): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userDetails');
+    // NOTE: Actual backend logout call is optional as token expiry handles sessions
+    this.http.post(`${this.authBaseUrl}/logout`, {}).pipe(catchError(() => of(null))).subscribe();
   }
 
   // METHOD FOR USER REGISTRATION (sets password and role)
@@ -267,7 +270,7 @@ export class CarRentalService {
     // RBAC: Logic handles fetching all or user-specific bookings
     if (this.isUserAdmin()) {
       return this.http
-        .get<ApiResponse<Booking[]>>(`${this.dataBaseUrl}/geAllBookings`)
+        .get<ApiResponse<Booking[]>>(`${this.dataBaseUrl}/geAllBookings`) // Backend route name typo (geAllBookings) retained
         .pipe(
           map((response: ApiResponse<Booking[]>) => (response.result ? response.data || [] : [])),
           catchError((error: any) => {
@@ -299,25 +302,13 @@ export class CarRentalService {
     return this.http
       .get<ApiResponse<Booking[]>>(`${this.dataBaseUrl}/geAllBookingsByCustomerId`, {
         params,
-      })
+      }) // Backend route name typo (geAllBookingsByCustomerId) retained
       .pipe(
         map((response: ApiResponse<Booking[]>) => (response.result ? response.data || [] : [])),
         catchError((error: any) => {
           console.error('Error fetching customer bookings:', error);
           return of([]);
         })
-      );
-  }
-
-  getBookingById(bookingId: number | string): Observable<Booking | null> {
-    const params = new HttpParams().set('bookingId', String(bookingId));
-    return this.http
-      .get<ApiResponse<Booking>>(`${this.dataBaseUrl}/GetBookingByBookingId`, {
-        params,
-      })
-      .pipe(
-        map((response: ApiResponse<Booking>) => (response.result ? response.data : null)),
-        catchError(() => of(null))
       );
   }
 
@@ -364,7 +355,7 @@ export class CarRentalService {
   deleteBooking(id: number | string): Observable<{ success: boolean; message: string }> {
     const params = new HttpParams().set('id', String(id));
     return this.http
-      .delete<ApiResponse<any>>(`${this.dataBaseUrl}/DeletBookingById`, { params })
+      .delete<ApiResponse<any>>(`${this.dataBaseUrl}/DeletBookingById`, { params }) // Backend route name typo (DeletBookingById) retained
       .pipe(
         map((response: ApiResponse<any>) => ({
           success: response.result,

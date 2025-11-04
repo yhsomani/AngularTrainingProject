@@ -1,17 +1,14 @@
-<!-- Notification -->
 <div *ngIf="notification() as notif"
   class="fade-in fixed top-24 right-8 z-50 max-w-sm rounded-lg border-l-4 p-4 shadow-xl" [ngClass]="{
         'border-green-500 bg-green-50': notif.type === 'success',
         'border-red-500 bg-red-50': notif.type === 'error'
       }" role="alert">
   <div class="flex items-center">
-    <!-- Success Icon -->
     <svg *ngIf="notif.type === 'success'" class="h-6 w-6 flex-shrink-0 text-green-600"
       xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round"
         d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
     </svg>
-    <!-- Error Icon -->
     <svg *ngIf="notif.type === 'error'" class="h-6 w-6 flex-shrink-0 text-red-600" xmlns="http://www.w3.org/2000/svg"
       fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round"
@@ -26,7 +23,6 @@
       </h3>
       <p class="text-sm">{{ notif.message }}</p>
     </div>
-    <!-- Close Button -->
     <button (click)="notification.set(null)" class="ml-4 rounded-md p-1" [ngClass]="{
             'text-green-700 hover:bg-green-100': notif.type === 'success',
             'text-red-700 hover:bg-red-100': notif.type === 'error'
@@ -39,9 +35,7 @@
   </div>
 </div>
 
-<!-- Main Layout Grid -->
 <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
-  <!-- Vehicle List (Left) - Full width for non-admin -->
   <div [class.lg:col-span-3]="!isAdmin" class="lg:col-span-2">
     <div class="rounded-2xl bg-white shadow-lg">
       <div
@@ -73,7 +67,6 @@
         </button>
       </div>
       <div class="relative overflow-x-auto">
-        <!-- Loading Overlay -->
         <div *ngIf="isLoading()"
           class="absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-sm">
           <svg class="h-8 w-8 animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -85,7 +78,6 @@
           </svg>
         </div>
 
-        <!-- Table -->
         <table class="min-w-full divide-y divide-gray-200" [class.opacity-50]="isLoading()">
           <thead class="bg-gray-50">
             <tr>
@@ -165,7 +157,6 @@
     </div>
   </div>
 
-  <!-- Vehicle Form (Right) - ADMIN ONLY -->
   <div *ngIf="isAdmin" class="lg:col-span-1">
     <div class="rounded-2xl bg-white p-6 shadow-lg">
       <h2 class="mb-5 text-lg font-semibold text-gray-900">
@@ -178,7 +169,6 @@
         {{ newCar().carId === 0 ? 'Add New Vehicle' : 'Edit Vehicle' }}
       </h2>
       <form #vehicleForm="ngForm" class="space-y-4">
-        <!-- Brand & Model -->
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label for="brand" class="block text-sm font-medium text-gray-700">Brand</label>
@@ -193,7 +183,6 @@
               placeholder="e.g., Camry" required />
           </div>
         </div>
-        <!-- Year & Color -->
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
@@ -208,7 +197,6 @@
               placeholder="e.g., Blue" required />
           </div>
         </div>
-        <!-- Daily Rate -->
         <div>
           <label for="dailyRate" class="block text-sm font-medium text-gray-700">Daily Rate (₹)</label>
           <div class="relative mt-1">
@@ -220,7 +208,6 @@
               placeholder="0.00" required />
           </div>
         </div>
-        <!-- Reg No -->
         <div>
           <label for="regNo" class="block text-sm font-medium text-gray-700">Registration No</label>
           <input type="text" id="regNo" [(ngModel)]="newCar().regNo" name="regNo"
@@ -231,14 +218,12 @@
             Registration number already exists.
           </p>
         </div>
-        <!-- Image URL -->
         <div>
           <label for="carImage" class="block text-sm font-medium text-gray-700">Car Image URL</label>
           <input type="url" id="carImage" [(ngModel)]="newCar().carImage" name="carImage"
             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             placeholder="https://..." />
 
-          <!-- Optional file input: convert selected images to data URLs for preview/storage -->
           <div class="mt-2 flex items-center gap-3">
             <label
               class="cursor-pointer rounded-md bg-white px-3 py-2 text-sm text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
@@ -249,7 +234,6 @@
               (error)="onImgError($event)" />
           </div>
         </div>
-        <!-- Buttons -->
         <div class="flex items-center justify-end gap-3 pt-4">
           <button type="button" (click)="resetForm(vehicleForm)"
             class="rounded-md bg-white px-3.5 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 transition-colors hover:bg-gray-50"
@@ -287,11 +271,8 @@
     </div>
   </div>
 
-  <!-- Confirmation Modal (Unchanged) -->
   <div *ngIf="modalState().visible" class="fade-in fixed inset-0 z-50 flex items-center justify-center">
-    <!-- Backdrop -->
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="closeModal()"></div>
-    <!-- Modal Panel -->
     <div class="modal-scale-in relative z-10 w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
       <div class="p-6">
         <div class="flex items-start gap-4">

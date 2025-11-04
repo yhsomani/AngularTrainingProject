@@ -111,9 +111,10 @@ export class BookingComponent implements OnInit {
     end.setUTCHours(0, 0, 0, 0);
 
     const diffTime = Math.abs(end.getTime() - start.getTime());
-    // Convert to days (milliseconds per day) and add 1 day for inclusive count
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-    return diffDays;
+    // Convert to days (milliseconds per day)
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    // Add 1 day for inclusive count
+    return diffDays + 1;
   }
 
   // Helper to calculate the estimated total bill

@@ -51,7 +51,7 @@ exports.updateCustomer = async (req, res) => {
     }
 };
 
-// DELETE /api/CarRentalApp/DeletCustomerById?id=... (Matches client typo)
+// DELETE /api/CarRentalApp/DeleteCustomerById?id=... (Matches client corrected name)
 exports.deleteCustomer = async (req, res) => {
     try {
         const customerId = req.query.id; // ID is the MongoDB _id string

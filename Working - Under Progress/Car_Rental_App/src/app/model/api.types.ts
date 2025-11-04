@@ -43,8 +43,8 @@ export interface Customer {
 
 export interface Booking {
   bookingId: number | string;
-  startDate: string; // UPDATED from bookingDate
-  endDate: string; // NEW field
+  startDate: string; // UPDATED from bookingDate for multi-day booking
+  endDate: string; // NEW field for multi-day booking
   discount: number;
   totalBillAmount: number;
   customerName: string;
