@@ -4,10 +4,54 @@ const Customer = require("../models/Customer");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+// ---------------- Password & Email Validation Utilities (Security Hardening) ----------------
+function validatePassword(password) {
+    const minLength = 8;
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasDigit = /\d/.test(password);
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>_+=\-\[\]\\/]/.test(password);
+
+    if (!password || password.length < minLength) {
+        return { valid: false, message: `Password must be at least ${minLength} characters long.` };
+    }
+    if (!(hasUpper && hasLower)) {
+        return { valid: false, message: "Password must contain both uppercase and lowercase letters." };
+    }
+    if (!hasDigit) {
+        return { valid: false, message: "Password must include at least one number." };
+    }
+    if (!hasSpecial) {
+        return { valid: false, message: "Password must include at least one special character." };
+    }
+    return { valid: true };
+}
+
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
 exports.register = async (req, res) => {
     try {
         // FIX: Destructure new required fields: mobileNo and customerCity
         const { email, password, name, role, mobileNo, customerCity } = req.body;
+
+        // 0. Basic input presence checks
+        if (!email || !password || !name || !mobileNo || !customerCity) {
+            return res.status(400).json({ message: "Missing required fields.", result: false });
+        }
+
+        // 0a. Email format validation (HIGH-1)
+        if (!validateEmail(email)) {
+            return res.status(400).json({ message: "Invalid email format.", result: false });
+        }
+
+        // 0b. Password strength validation (CRITICAL-2)
+        const pwdCheck = validatePassword(password);
+        if (!pwdCheck.valid) {
+            return res.status(400).json({ message: pwdCheck.message, result: false });
+        }
 
         // 1. Check if User account already exists
         let user = await User.findOne({ email });
@@ -21,7 +65,7 @@ exports.register = async (req, res) => {
         }
 
         // 3. Create the User account
-        const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt(12); // Increase cost factor slightly for stronger hashes
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const newUser = await User.create({
@@ -65,7 +109,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign(
             { userId: user._id, email: user.email, name: user.name, role: user.role }, // Include role in token
             process.env.JWT_SECRET || "secretkey",
-            { expiresIn: "1h" }
+            { expiresIn: process.env.JWT_EXPIRES_IN || "1h" }
         );
 
         res.json({
@@ -100,9 +144,12 @@ exports.updateUser = async (req, res) => {
             if (!isMatch) {
                 return res.status(400).json({ message: "Invalid current password.", result: false });
             }
-
-            // Hash new password
-            const salt = await bcrypt.genSalt(10);
+            // Validate new password strength
+            const newPwdCheck = validatePassword(newPassword);
+            if (!newPwdCheck.valid) {
+                return res.status(400).json({ message: newPwdCheck.message, result: false });
+            }
+            const salt = await bcrypt.genSalt(12);
             newHashedPassword = await bcrypt.hash(newPassword, salt);
         }
 

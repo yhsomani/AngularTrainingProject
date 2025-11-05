@@ -60,7 +60,38 @@
                 <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                 <input type="password" id="password" [(ngModel)]="newUserDetails().password" name="password"
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                    required minlength="6" />
+                    required minlength="8" autocomplete="new-password" />
+
+                <!-- Password Strength Meter -->
+                <div class="mt-2">
+                    <div class="h-2 w-full rounded bg-gray-200 overflow-hidden">
+                        <div class="h-full transition-all duration-300" [ngClass]="getPasswordMeterColor()"
+                            [style.width]="passwordStrength().score + '%'">
+                        </div>
+                    </div>
+                    <div class="mt-1 flex items-center justify-between text-xs">
+                        <span class="font-medium" [ngClass]="{
+                            'text-red-600': passwordStrength().label === 'Weak',
+                            'text-amber-600': passwordStrength().label === 'Fair',
+                            'text-blue-600': passwordStrength().label === 'Good',
+                            'text-green-600': passwordStrength().label === 'Strong'
+                        }">Strength: {{ passwordStrength().label }}</span>
+                        <span class="text-gray-500">{{ passwordStrength().score | number:'1.0-0' }}%</span>
+                    </div>
+                    <ul class="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] leading-tight">
+                        <li [ngClass]="passwordStrength().criteria.length ? 'text-green-600' : 'text-gray-500'">≥ 8
+                            characters</li>
+                        <li [ngClass]="passwordStrength().criteria.upper ? 'text-green-600' : 'text-gray-500'">Uppercase
+                            letter</li>
+                        <li [ngClass]="passwordStrength().criteria.lower ? 'text-green-600' : 'text-gray-500'">Lowercase
+                            letter</li>
+                        <li [ngClass]="passwordStrength().criteria.digit ? 'text-green-600' : 'text-gray-500'">Number
+                        </li>
+                        <li class="col-span-2"
+                            [ngClass]="passwordStrength().criteria.special ? 'text-green-600' : 'text-gray-500'">Special
+                            character (!@#$...)</li>
+                    </ul>
+                </div>
             </div>
 
             <div>

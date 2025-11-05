@@ -1,6 +1,6 @@
 // src/app/pages/customer-register/customer-register.ts
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { RegisterDetails, ApiResponse } from '../../model/api.types';
@@ -38,6 +38,35 @@ export class CustomerRegisterComponent {
   newUserDetails = signal<RegisterDetails>({ ...EMPTY_REGISTER_DETAILS });
   isLoading = signal(false);
   notification = signal<Notification | null>(null);
+
+  // ---------------- Password Strength (Frontend Companion to Backend Validation) ----------------
+  private passwordValue = computed(() => this.newUserDetails().password || '');
+
+  passwordStrength = computed(() => {
+    const pwd = this.passwordValue();
+    const criteria = {
+      length: pwd.length >= 8,
+      upper: /[A-Z]/.test(pwd),
+      lower: /[a-z]/.test(pwd),
+      digit: /\d/.test(pwd),
+      special: /[!@#$%^&*(),.?":{}|<>_+=\-\[\]\\/]/.test(pwd)
+    };
+    const passed = Object.values(criteria).filter(Boolean).length;
+    let score = (passed / 5) * 100; // percentage
+    let label: 'Weak' | 'Fair' | 'Good' | 'Strong' = 'Weak';
+    if (score >= 80) label = 'Strong';
+    else if (score >= 60) label = 'Good';
+    else if (score >= 40) label = 'Fair';
+    return { score, label, criteria };
+  });
+
+  getPasswordMeterColor(): string {
+    const score = this.passwordStrength().score;
+    if (score >= 80) return 'bg-green-500';
+    if (score >= 60) return 'bg-blue-500';
+    if (score >= 40) return 'bg-amber-500';
+    return 'bg-red-500';
+  }
 
   // --- Form Handling ---
   onRegister(form: NgForm) {
