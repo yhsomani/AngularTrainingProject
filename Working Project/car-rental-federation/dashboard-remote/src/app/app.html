@@ -1,0 +1,88 @@
+<div class="min-h-screen bg-gradient-to-b from-neutral-light via-white to-neutral-light py-12 px-4 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-5xl">
+    <section class="rounded-3xl bg-white p-8 shadow-card ring-1 ring-black/5">
+      <div class="flex flex-col items-center gap-6 text-center">
+        <span
+          class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1 text-sm font-medium text-primary">
+          <span class="h-2 w-2 rounded-full bg-primary"></span>
+          Live Preview
+        </span>
+        <img class="h-16 w-16" src="https://angular.dev/assets/images/logos/angular/angular.svg" alt="Angular" />
+        <div class="space-y-3">
+          <p class="text-sm uppercase tracking-[0.3em] text-primary/80">Dashboard Remote</p>
+          <h1 class="text-4xl font-semibold text-neutral-dark">Hello, {{ title() }}</h1>
+          <p class="text-lg text-neutral">Your micro frontend is wired up and ready to build delightful rental
+            experiences. 🎉</p>
+        </div>
+      </div>
+      <div class="mt-10 grid gap-8 lg:grid-cols-2">
+        <div class="space-y-4">
+          <p class="text-sm font-semibold uppercase tracking-wide text-neutral">Start building</p>
+          <div class="space-y-3">
+            @for (item of [
+            { title: 'Explore the Docs', link: 'https://angular.dev' },
+            { title: 'Learn with Tutorials', link: 'https://angular.dev/tutorials' },
+            { title: 'Prompt & AI best practices', link: 'https://angular.dev/ai/develop-with-ai'},
+            { title: 'CLI Docs', link: 'https://angular.dev/tools/cli' },
+            { title: 'Angular Language Service', link: 'https://angular.dev/tools/language-service' },
+            { title: 'Angular DevTools', link: 'https://angular.dev/tools/devtools' },
+            ]; track item.title) {
+            <a class="flex items-center justify-between rounded-2xl border border-slate-200/80 px-5 py-4 text-left transition hover:-translate-y-0.5 hover:border-primary hover:bg-primary/5"
+              [href]="item.link" target="_blank" rel="noopener">
+              <div>
+                <p class="text-base font-semibold text-neutral-dark">{{ item.title }}</p>
+                <p class="text-sm text-neutral">Open in new tab</p>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0-4-4m4 4-4 4" />
+              </svg>
+            </a>
+            }
+          </div>
+        </div>
+        <div class="space-y-6">
+          <div class="grid gap-4 md:grid-cols-2">
+            <div class="rounded-2xl bg-primary/10 px-5 py-6 text-primary">
+              <p class="text-xs uppercase tracking-wide">Status</p>
+              <p class="mt-2 text-3xl font-semibold">Healthy</p>
+              <p class="text-sm text-primary/80">Webpack Module Federation active</p>
+            </div>
+            <div class="rounded-2xl bg-success/10 px-5 py-6 text-success">
+              <p class="text-xs uppercase tracking-wide">Build</p>
+              <p class="mt-2 text-3xl font-semibold">Ready</p>
+              <p class="text-sm text-success/80">Tailwind 3.4 preset linked</p>
+            </div>
+          </div>
+          <div class="rounded-2xl border border-slate-200/80 p-6">
+            <p class="text-sm font-semibold uppercase tracking-wide text-neutral">Stay in the loop</p>
+            <div class="mt-4 flex flex-wrap items-center gap-4">
+              <a class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-neutral-light text-neutral-dark transition hover:bg-primary hover:text-white"
+                href="https://github.com/angular/angular" aria-label="Github" target="_blank" rel="noopener">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M12 0C5.373 0 0 5.486 0 12.253c0 5.414 3.438 10 8.207 11.62.6.113.82-.262.82-.582 0-.287-.011-1.244-.016-2.257-3.338.738-4.042-1.633-4.042-1.633-.546-1.41-1.335-1.787-1.335-1.787-1.09-.758.083-.743.083-.743 1.205.086 1.84 1.256 1.84 1.256 1.071 1.866 2.812 1.327 3.497 1.015.108-.787.42-1.327.763-1.632-2.665-.31-5.467-1.36-5.467-6.05 0-1.337.465-2.432 1.233-3.286-.124-.31-.535-1.562.117-3.256 0 0 1.005-.326 3.296 1.253a11.09 11.09 0 0 1 6.004 0c2.29-1.579 3.294-1.253 3.294-1.253.654 1.694.243 2.946.119 3.256.77.854 1.232 1.949 1.232 3.286 0 4.702-2.807 5.737-5.48 6.04.431.372.816 1.101.816 2.22 0 1.604-.015 2.898-.015 3.293 0 .322.218.7.826.58C20.565 22.248 24 17.664 24 12.253 24 5.486 18.627 0 12 0Z" />
+                </svg>
+              </a>
+              <a class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-neutral-light text-neutral-dark transition hover:bg-primary hover:text-white"
+                href="https://twitter.com/angular" aria-label="Twitter" target="_blank" rel="noopener">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </a>
+              <a class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-neutral-light text-neutral-dark transition hover:bg-primary hover:text-white"
+                href="https://www.youtube.com/channel/UCbn1OgGei-DV7aSRo_HaAiw" aria-label="Youtube" target="_blank"
+                rel="noopener">
+                <svg class="h-5 w-5" viewBox="0 0 29 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M27.49 1.524a3.7 3.7 0 0 1 1.41 1.598C29 5.35 29 10 29 10s0 4.649-.1 6.878a3.7 3.7 0 0 1-1.41 1.598c-.44.443-.99.762-1.592.926C23.678 20 14.807 20 14.807 20s-8.871 0-11.09-.598a3.69 3.69 0 0 1-1.592-.926 3.7 3.7 0 0 1-1.41-1.598C.613 14.65.613 10 .613 10s0-4.648.594-6.878A3.7 3.7 0 0 1 2.62 1.524 3.69 3.69 0 0 1 4.21.598C6.43 0 15.3 0 15.3 0s8.871 0 11.09.598c.602.164 1.151.483 1.592.926Zm-8.167 8.476L11.904 5.78v8.442l7.42-4.222Z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

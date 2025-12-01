@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Angular build & cache
+.angular/
+dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# IDE & Editors
+.idea/
+*.swp
+*.swo
+*~
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Debug & Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Runtime files
+*.pid
+*.seed
+*.pid.lock
+
+# Backup files
+*.backup
+*.bak
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+*.tgz
+.sass-cache/
+connect.lock
+libpeerconnection.log
+testem.log
+typings/
+
+# System
+.nfs*

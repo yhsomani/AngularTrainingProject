@@ -1,0 +1,239 @@
+<!-- Notification -->
+<div *ngIf="notification() as notif" class="fixed right-8 top-24 z-50 max-w-sm">
+    <div class="flex items-center rounded-lg border-l-4 p-4 shadow-xl"
+        [ngClass]="{'border-green-500 bg-green-50': notif.type === 'success', 'border-yellow-500 bg-yellow-50': notif.type === 'error'}">
+        <svg *ngIf="notif.type === 'success'" class="h-6 w-6 flex-shrink-0 text-green-600" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+        <svg *ngIf="notif.type === 'error'" class="h-6 w-6 flex-shrink-0 text-yellow-600" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+        </svg>
+        <div class="ml-3"
+            [ngClass]="{'text-green-800': notif.type === 'success', 'text-yellow-800': notif.type === 'error'}">
+            <h3 class="font-bold">{{ notif.type === 'success' ? 'Success' : 'Warning' }}</h3>
+            <p class="text-sm">{{ notif.message }}</p>
+        </div>
+        <button (click)="notification.set(null)" class="ml-4 rounded-md p-1"
+            [ngClass]="{'text-green-700 hover:bg-green-100': notif.type === 'success', 'text-yellow-700 hover:bg-yellow-100': notif.type === 'error'}">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
+</div>
+
+<!-- Loading Spinner -->
+<div *ngIf="isLoading()" class="flex h-64 items-center justify-center">
+    <svg class="h-8 w-8 animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+        </path>
+    </svg>
+</div>
+
+<!-- Error Message -->
+<div *ngIf="errorMessage()" class="rounded-lg border-l-4 border-red-600 bg-red-50 p-4 shadow-md">
+    <div class="flex items-center">
+        <svg class="h-6 w-6 flex-shrink-0 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+        </svg>
+        <div class="ml-3">
+            <h3 class="text-lg font-semibold text-red-800">Error</h3>
+            <p class="text-sm text-red-700">{{ errorMessage() }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Content -->
+<div *ngIf="!isLoading() && !errorMessage()" class="fade-in space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col items-start justify-between gap-4 sm:flex-row">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+                Dashboard
+            </h1>
+            <p class="mt-1 text-sm text-gray-600">
+                Overview of today's activity as of {{ today | date: 'medium' }}
+            </p>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <!-- Today's Revenue -->
+        <div
+            class="transform-gpu overflow-hidden rounded-2xl bg-white p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-medium text-gray-600">Today's Revenue</h3>
+                <span class="rounded-full bg-green-100 p-2 text-green-600">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.768 0-1.536.219-2.121.659-.957.712-1.613 1.99-1.613 3.341 0 .845.331 1.631.921 2.223Z" />
+                    </svg>
+                </span>
+            </div>
+            <p class="mt-4 text-4xl font-bold tracking-tight text-gray-900">
+                ₹{{ dashboardData()?.todayTotalAmount ?? 0 | number: '1.0-2' }}
+            </p>
+        </div>
+
+        <!-- Total Bookings -->
+        <div
+            class="transform-gpu overflow-hidden rounded-2xl bg-white p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-medium text-gray-600">Total Bookings</h3>
+                <span class="rounded-full bg-blue-100 p-2 text-blue-600">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                    </svg>
+                </span>
+            </div>
+            <p class="mt-4 text-4xl font-bold tracking-tight text-gray-900">
+                {{ dashboardData()?.totalBookings || 0 }}
+            </p>
+        </div>
+
+        <!-- Total Customers -->
+        <div
+            class="transform-gpu overflow-hidden rounded-2xl bg-white p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-medium text-gray-600">Total Customers</h3>
+                <span class="rounded-full bg-purple-100 p-2 text-purple-600">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                    </svg>
+                </span>
+            </div>
+            <p class="mt-4 text-4xl font-bold tracking-tight text-gray-900">
+                {{ dashboardData()?.totalCustomers || 0 }}
+            </p>
+        </div>
+
+        <!-- Performance -->
+        <div
+            class="transform-gpu overflow-hidden rounded-2xl bg-white p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-medium text-gray-600">
+                    Today's Performance
+                </h3>
+                <span class="rounded-full bg-yellow-100 p-2 text-yellow-600">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+                    </svg>
+                </span>
+            </div>
+            <div class="mt-4 flex items-baseline gap-2">
+                <span class="text-4xl font-bold" [class.text-green-600]="(dashboardData()?.todayTotalAmount ?? 0) > 0"
+                    [class.text-gray-900]="(dashboardData()?.todayTotalAmount ?? 0) === 0">
+                    {{ (dashboardData()?.todayTotalAmount ?? 0) > 0 ? 'Up' : 'Stable' }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Tables Grid -->
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <!-- Recent Bookings Table -->
+        <div class="overflow-hidden rounded-2xl bg-white shadow-lg lg:col-span-2">
+            <h3 class="border-b border-gray-200 px-6 py-4 text-lg font-semibold text-gray-900">
+                Recent Bookings
+            </h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Customer
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Car
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Amount
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Date
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 bg-white">
+                        <tr *ngFor="let booking of recentBookings()" class="transition-colors hover:bg-gray-50">
+                            <td class="whitespace-nowrap px-6 py-4">
+                                <div class="text-sm font-medium text-gray-900">
+                                    {{ booking.customerName }}
+                                </div>
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4">
+                                <div class="text-sm font-medium text-gray-900">
+                                    {{ booking.brand }}
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    {{ booking.model }}
+                                </div>
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4">
+                                <div class="text-sm font-medium text-gray-900">
+                                    ₹{{ booking.totalBillAmount | number: '1.0-2' }}
+                                </div>
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                                {{ booking.bookingDate | date: 'mediumDate' }}
+                            </td>
+                        </tr>
+                        <tr *ngIf="recentBookings().length === 0">
+                            <td colspan="4" class="px-6 py-12 text-center text-sm text-gray-500">
+                                No recent bookings found.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Top Customers List -->
+        <div class="overflow-hidden rounded-2xl bg-white shadow-lg">
+            <h3 class="border-b border-gray-200 px-6 py-4 text-lg font-semibold text-gray-900">
+                Top Customers
+            </h3>
+            <div class="flex flex-col divide-y divide-gray-200 p-4">
+                <div *ngFor="let customer of topCustomers()" class="flex items-center gap-4 px-2 py-4">
+                    <div
+                        class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-purple-100 text-sm font-semibold text-purple-600">
+                        {{ customer.customerName.charAt(0).toUpperCase() }}
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="truncate text-sm font-medium text-gray-900">
+                            {{ customer.customerName }}
+                        </p>
+                        <p class="truncate text-sm text-gray-500">
+                            {{ customer.bookingCount }} rentals
+                        </p>
+                    </div>
+                </div>
+                <div *ngIf="topCustomers().length === 0">
+                    <p class="px-2 py-12 text-center text-sm text-gray-500">
+                        No customer data available.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

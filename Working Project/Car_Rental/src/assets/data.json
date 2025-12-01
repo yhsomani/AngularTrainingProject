@@ -1,0 +1,77 @@
+{
+  "customers": [
+    {
+      "customerId": 1,
+      "customerName": "John Doe",
+      "customerCity": "New York",
+      "mobileNo": "1234567890",
+      "email": "john@example.com"
+    },
+    {
+      "customerId": 2,
+      "customerName": "Jane Smith",
+      "customerCity": "Los Angeles",
+      "mobileNo": "0987654321",
+      "email": "jane@example.com"
+    }
+  ],
+  "bookings": [
+    {
+      "bookingId": 1,
+      "bookingDate": "2023-10-01",
+      "discount": 0,
+      "totalBillAmount": 200,
+      "customerName": "John Doe",
+      "mobileNo": "1234567890",
+      "brand": "Toyota",
+      "model": "Camry",
+      "bookingUid": "BK001",
+      "carId": 1,
+      "customerId": 1,
+      "customerCity": "New York",
+      "email": "john@example.com"
+    },
+    {
+      "bookingId": 2,
+      "bookingDate": "2023-10-10",
+      "discount": 0,
+      "totalBillAmount": 150,
+      "customerName": "Jane Smith",
+      "mobileNo": "0987654321",
+      "brand": "Honda",
+      "model": "Civic",
+      "bookingUid": "BK002",
+      "carId": 2,
+      "customerId": 2,
+      "customerCity": "Los Angeles",
+      "email": "jane@example.com"
+    }
+  ],
+  "cars": [
+    {
+      "carId": 1,
+      "brand": "Toyota",
+      "model": "Camry",
+      "year": 2020,
+      "color": "Blue",
+      "dailyRate": 50,
+      "carImage": "",
+      "regNo": "ABC123"
+    },
+    {
+      "carId": 2,
+      "brand": "Honda",
+      "model": "Civic",
+      "year": 2019,
+      "color": "Red",
+      "dailyRate": 45,
+      "carImage": "",
+      "regNo": "XYZ456"
+    }
+  ],
+  "dashboard": {
+    "todayTotalAmount": 350,
+    "totalBookings": 2,
+    "totalCustomers": 2
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "dashboard": "http://localhost:3001/remoteEntry.js",
+  "vehicles": "http://localhost:3002/remoteEntry.js",
+  "customers": "http://localhost:3003/remoteEntry.js",
+  "bookings": "http://localhost:3004/remoteEntry.js",
+  "login": "http://localhost:3006/remoteEntry.js"
+}

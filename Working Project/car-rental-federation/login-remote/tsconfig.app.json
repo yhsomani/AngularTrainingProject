@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "types": [],
+    "paths": {
+      "@host/model": [
+        "../host-app/src/app/model"
+      ],
+      "@host/model/*": [
+        "../host-app/src/app/model/*"
+      ],
+      "@host/services": [
+        "../host-app/src/app/services"
+      ],
+      "@host/services/*": [
+        "../host-app/src/app/services/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts"
+  ]
+}

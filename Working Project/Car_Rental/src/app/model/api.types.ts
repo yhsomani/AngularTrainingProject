@@ -23,6 +23,7 @@ export interface Booking {
   model: string;
   bookingUid: string;
   carId: number;
+  customerId?: number;
   customerCity?: string;
   email?: string;
 }

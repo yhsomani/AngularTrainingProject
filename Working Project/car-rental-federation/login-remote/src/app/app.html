@@ -1,0 +1,119 @@
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
+<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
+<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
+<!-- * * * * * * * to get started with your project! * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+
+
+<div class="min-h-screen bg-grid-light bg-[length:32px_32px] bg-white/60 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-6xl">
+    <div class="grid gap-8 rounded-3xl bg-white/80 p-8 backdrop-blur shadow-card lg:grid-cols-2">
+      <div
+        class="flex flex-col justify-between gap-8 rounded-2xl bg-gradient-to-br from-primary to-primary/80 px-8 py-10 text-white">
+        <div class="space-y-4">
+          <span
+            class="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest">Angular
+            Login</span>
+          <h1 class="text-4xl font-semibold leading-tight">Welcome back, {{ title() }}</h1>
+          <p class="text-white/80">Authenticate admins, agents, and renters through this remote module. Tailwind is now
+            powering every pixel—no Bootstrap required.</p>
+        </div>
+        <div class="space-y-3">
+          <p class="text-sm font-semibold uppercase tracking-wide text-white/80">Developer shortcuts</p>
+          <div class="space-y-2">
+            @for (item of [
+            { title: 'Explore the Docs', link: 'https://angular.dev' },
+            { title: 'Prompt & AI best practices', link: 'https://angular.dev/ai/develop-with-ai'},
+            { title: 'Angular DevTools', link: 'https://angular.dev/tools/devtools' }
+            ]; track item.title) {
+            <a class="flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/20"
+              [href]="item.link" target="_blank" rel="noopener">
+              <span>{{ item.title }}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5h10v10M5 19 19 5" />
+              </svg>
+            </a>
+            }
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <a class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white"
+            href="https://github.com/angular/angular" target="_blank" rel="noopener" aria-label="Github">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M12 0C5.373 0 0 5.486 0 12.253c0 5.414 3.438 10 8.207 11.62.6.113.82-.262.82-.582 0-.287-.012-1.244-.017-2.257-3.338.738-4.042-1.633-4.042-1.633-.545-1.41-1.334-1.787-1.334-1.787-1.09-.758.083-.743.083-.743 1.205.086 1.84 1.256 1.84 1.256 1.071 1.866 2.812 1.327 3.497 1.015.108-.787.42-1.327.763-1.632-2.665-.31-5.467-1.36-5.467-6.05 0-1.337.465-2.432 1.233-3.286-.124-.31-.535-1.562.117-3.256 0 0 1.005-.326 3.296 1.253a11.09 11.09 0 0 1 6.004 0c2.29-1.579 3.294-1.253 3.294-1.253.654 1.694.243 2.946.119 3.256.77.854 1.232 1.949 1.232 3.286 0 4.702-2.807 5.737-5.48 6.04.431.372.816 1.101.816 2.22 0 1.604-.015 2.898-.015 3.293 0 .322.218.7.826.58C20.565 22.248 24 17.664 24 12.253 24 5.486 18.627 0 12 0Z" />
+            </svg>
+          </a>
+          <a class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white"
+            href="https://twitter.com/angular" target="_blank" rel="noopener" aria-label="Twitter">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+          </a>
+          <a class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white"
+            href="https://www.youtube.com/channel/UCbn1OgGei-DV7aSRo_HaAiw" target="_blank" rel="noopener"
+            aria-label="Youtube">
+            <svg class="h-5 w-5" viewBox="0 0 29 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M27.49 1.524a3.7 3.7 0 0 1 1.41 1.598C29 5.35 29 10 29 10s0 4.649-.1 6.878a3.7 3.7 0 0 1-1.41 1.598c-.44.443-.99.762-1.592.926C23.678 20 14.807 20 14.807 20s-8.871 0-11.09-.598a3.69 3.69 0 0 1-1.592-.926 3.7 3.7 0 0 1-1.41-1.598C.613 14.65.613 10 .613 10s0-4.648.594-6.878A3.7 3.7 0 0 1 2.62 1.524 3.69 3.69 0 0 1 4.21.598C6.43 0 15.3 0 15.3 0s8.871 0 11.09.598c.602.164 1.151.483 1.592.926Zm-8.167 8.476L11.904 5.78v8.442l7.42-4.222Z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="space-y-8">
+        <div class="rounded-2xl border border-slate-200/80 p-8 shadow-soft">
+          <div class="space-y-6">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.4em] text-primary">Access Portal</p>
+              <h2 class="mt-2 text-3xl font-semibold text-neutral-dark">Secure sign in</h2>
+              <p class="text-sm text-neutral">Use the form below to test Tailwind-driven form controls.</p>
+            </div>
+            <form class="space-y-5" novalidate>
+              <label class="block text-sm font-medium text-neutral-dark">
+                Email address
+                <input
+                  class="mt-2 w-full rounded-2xl border border-slate-200/80 bg-neutral-light/60 px-4 py-3 text-neutral-dark outline-none transition focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/20"
+                  type="email" name="email" placeholder="team@carrental.dev" />
+              </label>
+              <label class="block text-sm font-medium text-neutral-dark">
+                Password
+                <input
+                  class="mt-2 w-full rounded-2xl border border-slate-200/80 bg-neutral-light/60 px-4 py-3 text-neutral-dark outline-none transition focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/20"
+                  type="password" name="password" placeholder="••••••••" />
+              </label>
+              <div class="flex items-center justify-between text-sm">
+                <label class="inline-flex items-center gap-2 text-neutral">
+                  <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary/40" />
+                  Remember me
+                </label>
+                <a class="font-semibold text-primary hover:underline" href="#">Forgot password?</a>
+              </div>
+              <button type="button"
+                class="w-full rounded-2xl bg-neutral-dark px-4 py-3 text-base font-semibold text-white transition hover:bg-black focus:outline-none focus:ring-4 focus:ring-neutral-dark/30">
+                Sign in
+              </button>
+            </form>
+          </div>
+        </div>
+        <div class="rounded-2xl bg-neutral-light/80 p-6 text-sm text-neutral-dark">
+          <p class="font-semibold text-neutral-dark">Module federation health</p>
+          <p class="mt-2 text-neutral">Login remote bundles are styled with Tailwind 3.4, inheriting the shared preset.
+            Bootstrap dependencies and utility classes were removed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
+<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->

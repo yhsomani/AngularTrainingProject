@@ -59,7 +59,7 @@
                 clip-rule="evenodd" />
             </svg>
           </div>
-          <input id="password" name="password" type="password" required
+          <input id="password" name="password" type="password" required autocomplete="current-password"
             class="block w-full rounded-md border-0 py-3 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm"
             placeholder="Password" [ngModel]="password()" (ngModelChange)="password.set($event)" />
         </div>

@@ -1,0 +1,180 @@
+{
+  "cars": [
+    {
+      "carId": 1,
+      "brand": "Toyota",
+      "model": "Camry",
+      "year": 2024,
+      "color": "Midnight Black",
+      "dailyRate": 4500,
+      "regNo": "MH12AB1234",
+      "carImage": "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "carId": 2,
+      "brand": "Honda",
+      "model": "Civic",
+      "year": 2023,
+      "color": "Platinum White",
+      "dailyRate": 3800,
+      "regNo": "MH14XY9876",
+      "carImage": "https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "carId": 3,
+      "brand": "Tesla",
+      "model": "Model 3",
+      "year": 2024,
+      "color": "Red Multi-Coat",
+      "dailyRate": 8500,
+      "regNo": "MH01EV5555",
+      "carImage": "https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "carId": 4,
+      "brand": "BMW",
+      "model": "3 Series",
+      "year": 2023,
+      "color": "Portimao Blue",
+      "dailyRate": 12000,
+      "regNo": "MH12BZ9999",
+      "carImage": "https://images.unsplash.com/photo-1555215695-3004980adade?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "carId": 5,
+      "brand": "Mercedes",
+      "model": "C-Class",
+      "year": 2024,
+      "color": "Selenite Grey",
+      "dailyRate": 13500,
+      "regNo": "MH02MC7777",
+      "carImage": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "carId": 6,
+      "brand": "Hyundai",
+      "model": "Creta",
+      "year": 2023,
+      "color": "Phantom Black",
+      "dailyRate": 3200,
+      "regNo": "MH04CR1111",
+      "carImage": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "carId": 7,
+      "brand": "Kia",
+      "model": "Seltos",
+      "year": 2023,
+      "color": "Glacier White",
+      "dailyRate": 3100,
+      "regNo": "MH03KS2222",
+      "carImage": "https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&w=800&q=80"
+    }
+  ],
+  "bookings": [
+    {
+      "bookingId": 1,
+      "customerId": 1,
+      "customerName": "Rahul Sharma",
+      "carId": 1,
+      "brand": "Toyota",
+      "model": "Camry",
+      "bookingDate": "2024-03-15",
+      "bookingUid": "BK-2024-001",
+      "totalBillAmount": 13500,
+      "discount": 0
+    },
+    {
+      "bookingId": 2,
+      "customerId": 2,
+      "customerName": "Priya Patel",
+      "carId": 3,
+      "brand": "Tesla",
+      "model": "Model 3",
+      "bookingDate": "2024-03-18",
+      "bookingUid": "BK-2024-002",
+      "totalBillAmount": 17000,
+      "discount": 5
+    },
+    {
+      "bookingId": 3,
+      "customerId": 3,
+      "customerName": "Amit Singh",
+      "carId": 5,
+      "brand": "Mercedes",
+      "model": "C-Class",
+      "bookingDate": "2024-03-20",
+      "bookingUid": "BK-2024-003",
+      "totalBillAmount": 40500,
+      "discount": 10
+    },
+    {
+      "bookingId": 4,
+      "customerId": 4,
+      "customerName": "Sneha Gupta",
+      "carId": 2,
+      "brand": "Honda",
+      "model": "Civic",
+      "bookingDate": "2024-03-22",
+      "bookingUid": "BK-2024-004",
+      "totalBillAmount": 7600,
+      "discount": 0
+    },
+    {
+      "bookingId": 5,
+      "customerId": 5,
+      "customerName": "Vikram Malhotra",
+      "carId": 4,
+      "brand": "BMW",
+      "model": "3 Series",
+      "bookingDate": "2024-03-25",
+      "bookingUid": "BK-2024-005",
+      "totalBillAmount": 24000,
+      "discount": 0
+    }
+  ],
+  "customers": [
+    {
+      "customerId": 1,
+      "customerName": "Rahul Sharma",
+      "mobileNo": "+91 98765 43210",
+      "email": "rahul.s@example.com",
+      "city": "Mumbai"
+    },
+    {
+      "customerId": 2,
+      "customerName": "Priya Patel",
+      "mobileNo": "+91 98989 89898",
+      "email": "priya.p@example.com",
+      "city": "Pune"
+    },
+    {
+      "customerId": 3,
+      "customerName": "Amit Singh",
+      "mobileNo": "+91 77777 88888",
+      "email": "amit.singh@example.com",
+      "city": "Delhi"
+    },
+    {
+      "customerId": 4,
+      "customerName": "Sneha Gupta",
+      "mobileNo": "+91 99999 11111",
+      "email": "sneha.g@example.com",
+      "city": "Bangalore"
+    },
+    {
+      "customerId": 5,
+      "customerName": "Vikram Malhotra",
+      "mobileNo": "+91 88888 22222",
+      "email": "vikram.m@example.com",
+      "city": "Mumbai"
+    },
+    {
+      "customerId": 6,
+      "customerName": "Anjali Desai",
+      "mobileNo": "+91 91234 56789",
+      "email": "anjali.d@example.com",
+      "city": "Ahmedabad"
+    }
+  ]
+}

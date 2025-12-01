@@ -1,6 +1,6 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, of, map, catchError, BehaviorSubject } from 'rxjs';
 import {
   ApiResponse,
   Booking,
@@ -11,217 +11,166 @@ import {
 } from '../model/api.types';
 import { Capacitor } from '@capacitor/core';
 
+interface Data {
+  customers: Customer[];
+  bookings: Booking[];
+  cars: CarModel[];
+  dashboard: DashboardData;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class CarRentalService {
-  private get isNative() {
-    return Capacitor.isNativePlatform();
-  }
-  // Use the relative proxy path
-  private baseUrl = this.isNative
-    ? 'https://freeapi.miniprojectideas.com/api/CarRentalApp'
-    : '/api/CarRentalApp';
+  private data: Data = {
+    customers: [],
+    bookings: [],
+    cars: [],
+    dashboard: { todayTotalAmount: 0, totalBookings: 0, totalCustomers: 0 }
+  };
+  private dataLoaded$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.loadData();
+  }
+
+  private loadData() {
+    this.http.get<Data>('/assets/data.json').pipe(
+      catchError(() => of(this.data))
+    ).subscribe(data => {
+      this.data = data;
+      this.dataLoaded$.next(true);
+    });
+  }
 
   // Dashboard
   getDashboardData(): Observable<DashboardData | null> {
-    return this.http
-      .get<ApiResponse<any>>(`${this.baseUrl}/GetDashboardData`)
-      .pipe(
-        map((response) => {
-          try {
-            if (!response.result || !response.data) {
-              // Return a default object if the response is not successful
-              return { todayTotalAmount: 0, totalBookings: 0, totalCustomers: 0 };
-            }
-            // Safely parse all numeric values, handle both int/double type mismatches
-            const todayTotal = parseFloat(
-              response.data.todayTotalAmount?.toString() ?? '0'
-            );
-            return {
-              todayTotalAmount: isNaN(todayTotal) ? 0 : todayTotal,
-              totalBookings: 0, // API doesn't provide this, so default to 0
-              totalCustomers: 0, // API doesn't provide this, so default to 0
-            };
-          } catch (err) {
-            console.warn('Error parsing dashboard data:', err);
-            // Return a default object in case of any parsing error
-            return { todayTotalAmount: 0, totalBookings: 0, totalCustomers: 0 };
-          }
-        }),
-        catchError((error) => {
-          console.error('Error fetching dashboard data:', error);
-          // Return a default object on HTTP error
-          return of({ todayTotalAmount: 0, totalBookings: 0, totalCustomers: 0 });
-        })
-      );
+    return this.dataLoaded$.pipe(
+      map(() => this.data.dashboard)
+    );
   }
 
   // Customer APIs
   getCustomers(): Observable<Customer[]> {
-    return this.http
-      .get<ApiResponse<Customer[]>>(`${this.baseUrl}/GetCustomers`)
-      .pipe(
-        map((response) => (response.result ? response.data || [] : [])),
-        catchError(() => of([]))
-      );
+    return this.dataLoaded$.pipe(
+      map(() => this.data.customers)
+    );
   }
 
   createCustomer(
     customer: Customer
   ): Observable<{ success: boolean; message: string }> {
-    return this.http
-      .post<ApiResponse<any>>(`${this.baseUrl}/CreateNewCustomer`, customer)
-      .pipe(
-        map((response) => ({
-          success: response.result,
-          message: response.message || 'Customer created successfully',
-        })),
-        catchError((error) =>
-          of({
-            success: false,
-            message: error.message || 'Error creating customer',
-          })
-        )
-      );
+    return this.dataLoaded$.pipe(
+      map(() => {
+        const newId = Math.max(...this.data.customers.map(c => c.customerId), 0) + 1;
+        const newCustomer: Customer = { ...customer, customerId: newId };
+        this.data.customers.push(newCustomer);
+        this.updateDashboard();
+        return { success: true, message: 'Customer created successfully' };
+      })
+    );
   }
 
   updateCustomer(
     customer: Customer
   ): Observable<{ success: boolean; message: string }> {
-    return this.http
-      .put<ApiResponse<any>>(`${this.baseUrl}/UpdateCustomer`, customer)
-      .pipe(
-        map((response) => ({
-          success: response.result,
-          message: response.message || 'Customer updated successfully',
-        })),
-        catchError((error) =>
-          of({
-            success: false,
-            message: error.message || 'Error updating customer',
-          })
-        )
-      );
+    return this.dataLoaded$.pipe(
+      map(() => {
+        const index = this.data.customers.findIndex(c => c.customerId === customer.customerId);
+        if (index !== -1) {
+          this.data.customers[index] = customer;
+          return { success: true, message: 'Customer updated successfully' };
+        }
+        return { success: false, message: 'Customer not found' };
+      })
+    );
   }
 
   deleteCustomer(id: number): Observable<{ success: boolean; message: string }> {
-    const params = new HttpParams().set('id', id.toString());
-    return this.http
-      // FIX: Revert to the API's actual endpoint name (with typo)
-      .delete<ApiResponse<any>>(`${this.baseUrl}/DeletCustomerById`, { params })
-      .pipe(
-        map((response) => ({
-          success: response.result,
-          message: response.message || 'Customer deleted successfully',
-        })),
-        catchError((error) =>
-          of({
-            success: false,
-            message: error.message || 'Error deleting customer',
-          })
-        )
-      );
+    return this.dataLoaded$.pipe(
+      map(() => {
+        const index = this.data.customers.findIndex(c => c.customerId === id);
+        if (index !== -1) {
+          this.data.customers.splice(index, 1);
+          this.updateDashboard();
+          return { success: true, message: 'Customer deleted successfully' };
+        }
+        return { success: false, message: 'Customer not found' };
+      })
+    );
   }
 
   // Booking APIs
   getAllBookings(): Observable<Booking[]> {
-    return this.http
-      // FIX: Revert to the API's actual endpoint name (with typo)
-      .get<ApiResponse<Booking[]>>(`${this.baseUrl}/geAllBookings`)
-      .pipe(
-        map((response) => (response.result ? response.data || [] : [])),
-        catchError((error) => {
-          console.error('Error fetching bookings:', error);
-          return of([]);
-        })
-      );
+    return this.dataLoaded$.pipe(
+      map(() => this.data.bookings)
+    );
   }
 
   filterBookings(filter: BookingFilter): Observable<Booking[]> {
-    return this.http
-      .post<ApiResponse<Booking[]>>(`${this.baseUrl}/FilterBookings`, filter)
-      .pipe(
-        map((response) => (response.result ? response.data || [] : [])),
-        catchError(() => of([]))
-      );
+    return this.dataLoaded$.pipe(
+      map(() => {
+        return this.data.bookings.filter(b =>
+          (!filter.mobileNo || b.mobileNo === filter.mobileNo) &&
+          (!filter.customerName || b.customerName === filter.customerName) &&
+          (!filter.carId || b.carId === filter.carId) &&
+          (!filter.fromBookingDate || b.bookingDate >= filter.fromBookingDate) &&
+          (!filter.toBookingDate || b.bookingDate <= filter.toBookingDate)
+        );
+      })
+    );
   }
 
   getBookingsByCustomerId(custId: number): Observable<Booking[]> {
-    const params = new HttpParams().set('custId', custId.toString());
-    return this.http
-      // FIX: Revert to the API's actual endpoint name (with typo)
-      .get<ApiResponse<Booking[]>>(`${this.baseUrl}/geAllBookingsByCustomerId`, {
-        params,
-      })
-      .pipe(
-        map((response) => (response.result ? response.data || [] : [])),
-        catchError((error) => {
-          console.error('Error fetching customer bookings:', error);
-          return of([]);
-        })
-      );
+    return this.dataLoaded$.pipe(
+      map(() => this.data.bookings.filter(b => b.customerId === custId))
+    );
   }
 
   getBookingById(bookingId: number): Observable<Booking | null> {
-    const params = new HttpParams().set('bookingId', bookingId.toString());
-    return this.http
-      .get<ApiResponse<Booking>>(`${this.baseUrl}/GetBookingByBookingId`, {
-        params,
-      })
-      .pipe(
-        map((response) => (response.result ? response.data : null)),
-        catchError(() => of(null))
-      );
+    return this.dataLoaded$.pipe(
+      map(() => this.data.bookings.find(b => b.bookingId === bookingId) || null)
+    );
   }
 
   createBooking(
-    booking: Booking
+    booking: Omit<Booking, 'bookingId'>
   ): Observable<{ success: boolean; message: string }> {
-    return this.http
-      .post<ApiResponse<any>>(`${this.baseUrl}/CreateNewBooking`, booking)
-      .pipe(
-        map((response) => ({
-          success: response.result,
-          message: response.message || 'Booking created successfully',
-        })),
-        catchError((error) =>
-          of({
-            success: false,
-            message: error.message || 'Error creating booking',
-          })
-        )
-      );
+    return this.dataLoaded$.pipe(
+      map(() => {
+        const newId = Math.max(...this.data.bookings.map(b => b.bookingId), 0) + 1;
+        const newBooking: Booking = { ...booking, bookingId: newId };
+        this.data.bookings.push(newBooking);
+        this.updateDashboard();
+        return { success: true, message: 'Booking created successfully' };
+      })
+    );
   }
 
   deleteBooking(id: number): Observable<{ success: boolean; message: string }> {
-    const params = new HttpParams().set('id', id.toString());
-    return this.http
-      // FIX: Revert to the API's actual endpoint name (with typo)
-      .delete<ApiResponse<any>>(`${this.baseUrl}/DeletBookingById`, { params })
-      .pipe(
-        map((response) => ({
-          success: response.result,
-          message: response.message || 'Booking deleted successfully',
-        })),
-        catchError((error) =>
-          of({
-            success: false,
-            message: error.message || 'Error deleting booking',
-          })
-        )
-      );
+    return this.dataLoaded$.pipe(
+      map(() => {
+        const index = this.data.bookings.findIndex(b => b.bookingId === id);
+        if (index !== -1) {
+          this.data.bookings.splice(index, 1);
+          this.updateDashboard();
+          return { success: true, message: 'Booking deleted successfully' };
+        }
+        return { success: false, message: 'Booking not found' };
+      })
+    );
   }
 
-  // Car APIs (Vehicle Component uses its own HTTP client, but Booking needs this)
+  // Car APIs
   getCars(): Observable<CarModel[]> {
-    return this.http
-      .get<ApiResponse<CarModel[]>>(`${this.baseUrl}/GetCars`)
-      .pipe(
-        map((response) => (response.result ? response.data || [] : [])),
-        catchError(() => of([]))
-      );
+    return this.dataLoaded$.pipe(
+      map(() => this.data.cars)
+    );
+  }
+
+  private updateDashboard() {
+    this.data.dashboard.totalCustomers = this.data.customers.length;
+    this.data.dashboard.totalBookings = this.data.bookings.length;
+    this.data.dashboard.todayTotalAmount = this.data.bookings.reduce((sum, b) => sum + b.totalBillAmount, 0);
   }
 }
