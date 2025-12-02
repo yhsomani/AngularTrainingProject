@@ -1,0 +1,235 @@
+<!-- Notification Toast -->
+@if (notification(); as notif) {
+<div class="fixed right-6 top-6 z-50 animate-slide-in-right">
+    <div class="flex items-center gap-3 rounded-xl border-l-4 px-5 py-4 shadow-elevated backdrop-blur-sm" [ngClass]="{
+        'border-success bg-success/10': notif.type === 'success',
+        'border-danger bg-danger/10': notif.type === 'error'
+      }">
+        <svg class="h-5 w-5"
+            [ngClass]="{'text-success': notif.type === 'success', 'text-danger': notif.type === 'error'}"
+            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            @if (notif.type === 'success') {
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            } @else {
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            }
+        </svg>
+        <div>
+            <p class="text-sm font-semibold"
+                [ngClass]="{'text-success': notif.type === 'success', 'text-danger': notif.type === 'error'}">
+                {{ notif.type === 'success' ? 'Success' : 'Error' }}
+            </p>
+            <p class="text-sm text-neutral-dark">{{ notif.message }}</p>
+        </div>
+    </div>
+</div>
+}
+
+<div class="rounded-2xl border border-white/60 bg-white/95 shadow-card">
+    <!-- Header -->
+    <div class="flex flex-col gap-4 border-b border-neutral-200 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h2 class="text-lg font-semibold text-neutral-dark">Bookings</h2>
+            <p class="mt-1 text-sm text-neutral">Manage customer reservations</p>
+        </div>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <!-- Search -->
+            <div class="relative">
+                <svg class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+                <input type="text" placeholder="Search bookings..." [ngModel]="searchQuery()"
+                    (ngModelChange)="searchQuery.set($event)"
+                    class="w-full rounded-lg border border-neutral-200 bg-white py-2 pl-10 pr-4 text-sm text-neutral-dark placeholder:text-neutral focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 sm:w-64" />
+            </div>
+            <!-- Add Button -->
+            <button (click)="openModal('new')"
+                class="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-primary-700 hover:shadow-md">
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                New Booking
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading()) {
+    <div class="flex items-center justify-center py-12">
+        <div class="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+    </div>
+    } @else {
+    <!-- Table -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-neutral-200">
+            <thead class="bg-neutral-50">
+                <tr>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-neutral">Booking
+                        ID</th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-neutral">Customer
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-neutral">Vehicle
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-neutral">Date
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-neutral">Amount
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-neutral">Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-neutral-200 bg-white">
+                @for (booking of filteredBookings; track booking.bookingId) {
+                <tr class="transition-colors hover:bg-neutral-50">
+                    <td class="whitespace-nowrap px-6 py-4">
+                        <span class="inline-flex rounded-lg bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+                            {{ booking.bookingUid }}
+                        </span>
+                    </td>
+                    <td class="whitespace-nowrap px-6 py-4">
+                        <div class="flex items-center">
+                            <div
+                                class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-info/20 to-info/40 text-xs font-bold text-info">
+                                {{ booking.customerName.charAt(0) || 'C' }}
+                            </div>
+                            <div class="ml-3">
+                                <div class="text-sm font-medium text-neutral-dark">{{ booking.customerName }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="whitespace-nowrap px-6 py-4">
+                        <div class="text-sm font-medium text-neutral-dark">{{ booking.brand }} {{ booking.model }}</div>
+                    </td>
+                    <td class="whitespace-nowrap px-6 py-4">
+                        <div class="text-sm text-neutral-dark">{{ formatDate(booking.bookingDate) }}</div>
+                    </td>
+                    <td class="whitespace-nowrap px-6 py-4">
+                        <div class="text-sm font-semibold text-neutral-dark">{{ formatCurrency(booking.totalBillAmount)
+                            }}</div>
+                        @if (booking.discount > 0) {
+                        <div class="text-xs text-success">{{ booking.discount }}% discount</div>
+                        }
+                    </td>
+                    <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
+                        <button (click)="openModal('edit', booking)"
+                            class="mr-3 font-medium text-primary transition-colors hover:text-primary-700">
+                            Edit
+                        </button>
+                        <button (click)="deleteBooking(booking)"
+                            class="font-medium text-danger transition-colors hover:text-danger-700">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+                } @empty {
+                <tr>
+                    <td colspan="6" class="px-6 py-12 text-center">
+                        <svg class="mx-auto h-12 w-12 text-neutral-300" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                        </svg>
+                        <p class="mt-4 text-sm font-medium text-neutral-dark">No bookings found</p>
+                        <p class="mt-1 text-sm text-neutral">Get started by creating a new booking.</p>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    }
+</div>
+
+<!-- Modal -->
+@if (modalOpen()) {
+<div
+    class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-neutral-dark/50 p-4 backdrop-blur-sm">
+    <div class="relative w-full max-w-md animate-scale-in rounded-2xl bg-white shadow-elevated">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-neutral-200 p-6">
+            <h3 class="text-lg font-semibold text-neutral-dark">
+                {{ isEditing() ? 'Edit Booking' : 'New Booking' }}
+            </h3>
+            <button (click)="closeModal()"
+                class="rounded-lg p-2 text-neutral transition-colors hover:bg-neutral-100 hover:text-neutral-dark">
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <form (ngSubmit)="saveBooking()" class="p-6">
+            <div class="space-y-4">
+                <!-- Customer -->
+                <div>
+                    <label for="customerId" class="mb-1.5 block text-sm font-medium text-neutral-dark">Customer</label>
+                    <select id="customerId" name="customerId" [(ngModel)]="activeBooking.customerId" required
+                        class="block w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-dark focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20">
+                        <option [value]="0" disabled>Select a customer</option>
+                        @for (customer of customerList(); track customer.customerId) {
+                        <option [value]="customer.customerId">{{ customer.customerName }}</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Car -->
+                <div>
+                    <label for="carId" class="mb-1.5 block text-sm font-medium text-neutral-dark">Vehicle</label>
+                    <select id="carId" name="carId" [(ngModel)]="activeBooking.carId" required
+                        class="block w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-dark focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20">
+                        <option [value]="0" disabled>Select a vehicle</option>
+                        @for (car of carList(); track car.carId) {
+                        <option [value]="car.carId">{{ car.brand }} {{ car.model }} ({{ formatCurrency(car.dailyRate)
+                            }}/day)</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Date & Discount -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="bookingDate" class="mb-1.5 block text-sm font-medium text-neutral-dark">Date</label>
+                        <input type="date" id="bookingDate" name="bookingDate" [(ngModel)]="activeBooking.bookingDate"
+                            required
+                            class="block w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-dark focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20" />
+                    </div>
+                    <div>
+                        <label for="discount" class="mb-1.5 block text-sm font-medium text-neutral-dark">Discount
+                            (%)</label>
+                        <input type="number" id="discount" name="discount" [(ngModel)]="activeBooking.discount" min="0"
+                            max="100"
+                            class="block w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-dark placeholder:text-neutral focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
+                            placeholder="0" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="mt-6 flex items-center justify-end gap-3">
+                <button type="button" (click)="closeModal()"
+                    class="rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-dark transition-colors hover:bg-neutral-50">
+                    Cancel
+                </button>
+                <button type="submit"
+                    class="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-primary-700 hover:shadow-md">
+                    {{ isEditing() ? 'Update Booking' : 'Create Booking' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+}

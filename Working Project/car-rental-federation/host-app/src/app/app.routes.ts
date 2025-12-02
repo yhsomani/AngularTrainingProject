@@ -47,6 +47,15 @@ export const routes: Routes = [
                     }).then(m => m.BookingsComponent)
             },
             {
+                path: 'admin',
+                loadComponent: () =>
+                    loadRemoteModule({
+                        type: 'module',
+                        remoteEntry: 'http://localhost:3005/remoteEntry.js',
+                        exposedModule: './Component'
+                    }).then(m => m.AdminComponent)
+            },
+            {
                 path: '',
                 redirectTo: 'dashboard',
                 pathMatch: 'full'

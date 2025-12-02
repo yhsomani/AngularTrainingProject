@@ -176,5 +176,28 @@
       "email": "anjali.d@example.com",
       "city": "Ahmedabad"
     }
+  ],
+  "users": [
+    {
+      "userId": 1,
+      "username": "admin",
+      "email": "admin@apexrentals.com",
+      "role": "Administrator",
+      "status": "Active"
+    },
+    {
+      "userId": 2,
+      "username": "manager_dave",
+      "email": "dave@apexrentals.com",
+      "role": "Manager",
+      "status": "Active"
+    },
+    {
+      "userId": 3,
+      "username": "support_sarah",
+      "email": "sarah@apexrentals.com",
+      "role": "Support",
+      "status": "Inactive"
+    }
   ]
 }

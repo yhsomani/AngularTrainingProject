@@ -1,0 +1,221 @@
+<!-- Notification Toast -->
+@if (notification(); as notif) {
+<div class="fixed right-6 top-6 z-50 animate-slide-in-right">
+    <div class="flex items-center gap-3 rounded-xl border-l-4 px-5 py-4 shadow-elevated backdrop-blur-sm" [ngClass]="{
+        'border-success bg-success/10': notif.type === 'success',
+        'border-danger bg-danger/10': notif.type === 'error'
+      }">
+        <svg class="h-5 w-5"
+            [ngClass]="{'text-success': notif.type === 'success', 'text-danger': notif.type === 'error'}"
+            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            @if (notif.type === 'success') {
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            } @else {
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            }
+        </svg>
+        <div>
+            <p class="text-sm font-semibold"
+                [ngClass]="{'text-success': notif.type === 'success', 'text-danger': notif.type === 'error'}">
+                {{ notif.type === 'success' ? 'Success' : 'Error' }}
+            </p>
+            <p class="text-sm text-neutral-dark">{{ notif.message }}</p>
+        </div>
+    </div>
+</div>
+}
+
+<div class="rounded-2xl border border-white/60 bg-white/95 shadow-card">
+    <!-- Header -->
+    <div class="flex flex-col gap-4 border-b border-neutral-200 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h2 class="text-lg font-semibold text-neutral-dark">System Users</h2>
+            <p class="mt-1 text-sm text-neutral">Manage administrator and staff accounts</p>
+        </div>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <!-- Search -->
+            <div class="relative">
+                <svg class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+                <input type="text" placeholder="Search users..." [ngModel]="searchQuery()"
+                    (ngModelChange)="searchQuery.set($event)"
+                    class="w-full rounded-lg border border-neutral-200 bg-white py-2 pl-10 pr-4 text-sm text-neutral-dark placeholder:text-neutral focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 sm:w-64" />
+            </div>
+            <!-- Add Button -->
+            <button (click)="openModal('new')"
+                class="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-primary-700 hover:shadow-md">
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Add User
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading()) {
+    <div class="flex items-center justify-center py-12">
+        <div class="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+    </div>
+    } @else {
+    <!-- Table -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-neutral-200">
+            <thead class="bg-neutral-50">
+                <tr>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-neutral">User
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-neutral">Role
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-neutral">Status
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-neutral">Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-neutral-200 bg-white">
+                @for (user of filteredUsers; track user.userId) {
+                <tr class="transition-colors hover:bg-neutral-50">
+                    <td class="whitespace-nowrap px-6 py-4">
+                        <div class="flex items-center">
+                            <div
+                                class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-primary-600 text-sm font-bold text-white shadow-sm">
+                                {{ user.username.charAt(0).toUpperCase() }}
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-neutral-dark">{{ user.username }}</div>
+                                <div class="text-sm text-neutral">{{ user.email }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="whitespace-nowrap px-6 py-4">
+                        <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold"
+                            [ngClass]="getRoleBadgeClass(user.role)">
+                            {{ user.role }}
+                        </span>
+                    </td>
+                    <td class="whitespace-nowrap px-6 py-4">
+                        <button (click)="toggleUserStatus(user)"
+                            class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition-colors"
+                            [ngClass]="getStatusBadgeClass(user.status)">
+                            <span class="h-1.5 w-1.5 rounded-full"
+                                [ngClass]="user.status === 'Active' ? 'bg-green-500' : 'bg-red-500'"></span>
+                            {{ user.status }}
+                        </button>
+                    </td>
+                    <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
+                        <button (click)="openModal('edit', user)"
+                            class="mr-3 font-medium text-primary transition-colors hover:text-primary-700">
+                            Edit
+                        </button>
+                        <button (click)="deleteUser(user)"
+                            class="font-medium text-danger transition-colors hover:text-danger-700">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+                } @empty {
+                <tr>
+                    <td colspan="4" class="px-6 py-12 text-center">
+                        <svg class="mx-auto h-12 w-12 text-neutral-300" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                        </svg>
+                        <p class="mt-4 text-sm font-medium text-neutral-dark">No users found</p>
+                        <p class="mt-1 text-sm text-neutral">Get started by adding a new user.</p>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    }
+</div>
+
+<!-- Modal -->
+@if (modalOpen()) {
+<div
+    class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-neutral-dark/50 p-4 backdrop-blur-sm">
+    <div class="relative w-full max-w-md animate-scale-in rounded-2xl bg-white shadow-elevated">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-neutral-200 p-6">
+            <h3 class="text-lg font-semibold text-neutral-dark">
+                {{ isEditing() ? 'Edit User' : 'Add New User' }}
+            </h3>
+            <button (click)="closeModal()"
+                class="rounded-lg p-2 text-neutral transition-colors hover:bg-neutral-100 hover:text-neutral-dark">
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <form (ngSubmit)="saveUser()" class="p-6">
+            <div class="space-y-4">
+                <!-- Username -->
+                <div>
+                    <label for="username" class="mb-1.5 block text-sm font-medium text-neutral-dark">Username</label>
+                    <input type="text" id="username" name="username" [(ngModel)]="activeUser.username" required
+                        class="block w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-dark placeholder:text-neutral focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        placeholder="e.g., john_doe" />
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="mb-1.5 block text-sm font-medium text-neutral-dark">Email</label>
+                    <input type="email" id="email" name="email" [(ngModel)]="activeUser.email" required
+                        class="block w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-dark placeholder:text-neutral focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        placeholder="e.g., john@apexrentals.com" />
+                </div>
+
+                <!-- Role & Status -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="role" class="mb-1.5 block text-sm font-medium text-neutral-dark">Role</label>
+                        <select id="role" name="role" [(ngModel)]="activeUser.role"
+                            class="block w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-dark focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20">
+                            <option value="Administrator">Administrator</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Support">Support</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="status" class="mb-1.5 block text-sm font-medium text-neutral-dark">Status</label>
+                        <select id="status" name="status" [(ngModel)]="activeUser.status"
+                            class="block w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-dark focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="mt-6 flex items-center justify-end gap-3">
+                <button type="button" (click)="closeModal()"
+                    class="rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-dark transition-colors hover:bg-neutral-50">
+                    Cancel
+                </button>
+                <button type="submit"
+                    class="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-primary-700 hover:shadow-md">
+                    {{ isEditing() ? 'Update User' : 'Create User' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+}
